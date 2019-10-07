@@ -1,0 +1,2 @@
+class ConnectionGene:
+    pass

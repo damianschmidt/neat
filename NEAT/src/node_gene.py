@@ -1,0 +1,2 @@
+class NodeGene:
+    pass
