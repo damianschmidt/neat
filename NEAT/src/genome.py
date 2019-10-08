@@ -1,4 +1,5 @@
-from random import sample
+from random import sample, random
+from NEAT.src.connection_gene import ConnectionGene
 
 
 class Genome:
@@ -14,6 +15,15 @@ class Genome:
 
         in_correct_order = self.are_nodes_in_correct_order(node1, node2)
         connection_exist = self.is_connection(node1, node2)
+
+        if in_correct_order:
+            new_connection = ConnectionGene(node1.node_id, node2.node_id, random(), True,
+                                            0)  # No idea what is innovation number
+            self.list_of_connections.append(new_connection)
+        else:
+            new_connection = ConnectionGene(node2.node_id, node1.node_id, random(), True,
+                                            0)  # No idea what is innovation number
+            self.list_of_connections.append(new_connection)
 
     def is_connection(self, node1, node2):
         connection_exist = False

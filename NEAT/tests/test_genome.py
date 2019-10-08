@@ -29,8 +29,8 @@ class GenomeTestCase(unittest.TestCase):
     ])
     def test_is_connection(self, node1, node2, output):
         genome = Genome()
-        genome.list_of_connections.append(ConnectionGene(1, 3, 0.5, False, 1))
-        genome.list_of_connections.append(ConnectionGene(2, 3, 0.5, False, 2))
+        genome.list_of_connections.append(ConnectionGene(1, 3, 0.5, True, 1))
+        genome.list_of_connections.append(ConnectionGene(2, 3, 0.5, True, 2))
         connection_exists = genome.is_connection(node1, node2)
 
         self.assertEqual(connection_exists, output)
