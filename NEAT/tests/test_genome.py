@@ -35,6 +35,12 @@ class GenomeTestCase(unittest.TestCase):
 
         self.assertEqual(connection_exists, output)
 
+    def test_add_connection_mutation(self):
+        pass
+
+    def test_add_node_mutation(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

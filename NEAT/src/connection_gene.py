@@ -5,3 +5,6 @@ class ConnectionGene:
         self.weight = weight
         self.expressed = expressed
         self.innovation_num = innovation_number
+
+    def disable_connection(self):
+        self.expressed = False
