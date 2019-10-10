@@ -29,8 +29,8 @@ class GenomeTestCase(unittest.TestCase):
     ])
     def test_is_connection(self, node1, node2, output):
         genome = Genome()
-        genome.list_of_connections.append(ConnectionGene(1, 3, 0.5, True, 1))
-        genome.list_of_connections.append(ConnectionGene(2, 3, 0.5, True, 2))
+        genome.dict_of_connections[1] = ConnectionGene(1, 3, 0.5, True, 1)
+        genome.dict_of_connections[2] = ConnectionGene(2, 3, 0.5, True, 2)
         connection_exists = genome.is_connection(node1, node2)
 
         self.assertEqual(connection_exists, output)
@@ -39,6 +39,9 @@ class GenomeTestCase(unittest.TestCase):
         pass
 
     def test_add_node_mutation(self):
+        pass
+
+    def test_crossover(self):
         pass
 
 

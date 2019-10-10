@@ -8,3 +8,6 @@ class ConnectionGene:
 
     def disable_connection(self):
         self.expressed = False
+
+    def copy(self):
+        return ConnectionGene(self.in_node, self.out_node, self.weight, self.expressed, self.innovation_num)
