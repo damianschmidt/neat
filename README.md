@@ -1,6 +1,7 @@
 # Praca inżynierska - program
 
 ### TODO:
-- [ ] Innovation number generator
-- [ ] Unit tests for structure mutations (nodes and connections)
-- [ ] Unit tests for crossover
+- [X] Innovation number generator
+- [X] Unit tests for structure mutations (nodes and connections)
+- [X] Unit tests for crossover
+- [ ] Test somehow (maybe graphically) crossover function with matching connections

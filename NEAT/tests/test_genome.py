@@ -61,7 +61,10 @@ class GenomeTestCase(unittest.TestCase):
         self.assertEqual(genome.dict_of_nodes[3].node_type, 'HIDDEN')
 
     def test_crossover_without_connections(self):
-        """ Only with same parent genomes cause of problem with testing random choice of matching child connection"""
+        """
+        Only with same parent genomes and exceeded cause of problem with testing random choice of matching child
+        connection.
+        """
         parent_genome1 = Genome()
         parent_genome1.dict_of_nodes[0] = NodeGene('SENSOR', 0)
         parent_genome1.dict_of_nodes[1] = NodeGene('SENSOR', 1)
@@ -79,7 +82,10 @@ class GenomeTestCase(unittest.TestCase):
         self.assertEqual(parent_genome1.dict_of_connections, child_genome.dict_of_connections)
 
     def test_crossover_disjoint_and_exceed(self):
-        """ Only with same parent genomes cause of problem with testing random choice of matching child connection"""
+        """
+        Only with same parent genomes and exceeded cause of problem with testing random choice of matching child
+        connection.
+        """
         parent_genome1 = Genome()
         parent_genome1.dict_of_nodes[0] = NodeGene('SENSOR', 0)
         parent_genome1.dict_of_nodes[1] = NodeGene('SENSOR', 1)
