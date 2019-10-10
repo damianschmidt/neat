@@ -21,11 +21,11 @@ class Genome:
         if not connection_exist:
             if in_correct_order:
                 new_connection = ConnectionGene(node1.node_id, node2.node_id, random.random(), True,
-                                                0)  # No idea what is innovation number
+                                                len(self.dict_of_connections))  # No idea what is innovation number
                 self.dict_of_connections[new_connection.innovation_num] = new_connection
             else:
                 new_connection = ConnectionGene(node2.node_id, node1.node_id, random.random(), True,
-                                                0)  # No idea what is innovation number
+                                                len(self.dict_of_connections))
                 self.dict_of_connections[new_connection.innovation_num] = new_connection
 
     def is_connection(self, node1, node2):
@@ -52,20 +52,20 @@ class Genome:
 
     def add_node_mutation(self):
         connection_gene = self.dict_of_connections[random.randint(0, len(self.dict_of_connections) - 1)]
-        in_node = connection_gene.in_node
-        out_node = connection_gene.out_node
+        in_node = self.dict_of_nodes[connection_gene.in_node]
+        out_node = self.dict_of_nodes[connection_gene.out_node]
 
-        connection_gene.disable()
+        connection_gene.disable_connection()
 
         new_node = NodeGene('HIDDEN', len(self.dict_of_nodes))
+        self.dict_of_nodes[new_node.node_id] = new_node
 
         # Connect existing nodes with new one
-        connection_in_to_new = ConnectionGene(in_node.node_id, new_node.node_id, 1.0, True, 0)  # innovation number
-        connection_new_to_out = ConnectionGene(new_node.node_id, out_node.node_id, connection_gene.weight, True,
-                                               0)  # innovation number
-
-        self.dict_of_nodes[new_node.node_id] = new_node
+        connection_in_to_new = ConnectionGene(in_node.node_id, new_node.node_id, 1.0, True, len(self.dict_of_connections))
         self.dict_of_connections[connection_in_to_new.innovation_num] = connection_in_to_new
+
+        connection_new_to_out = ConnectionGene(new_node.node_id, out_node.node_id, connection_gene.weight, True,
+                                               len(self.dict_of_connections))
         self.dict_of_connections[connection_new_to_out.innovation_num] = connection_new_to_out
 
     # parent_genome1 is more fit of parent
@@ -73,14 +73,14 @@ class Genome:
         child_genome = Genome()
 
         for node in parent_genome1.dict_of_nodes.values():
-            child_genome.dict_of_nodes[node.node_id] = node.copy()
+            child_genome.dict_of_nodes[node.node_id] = node
 
         for connection in parent_genome1.dict_of_connections.values():
             if connection.innovation_num in parent_genome2.dict_of_connections:  # matching connection
-                child_connection = connection.copy() if bool(random.getrandbits(1)) else \
-                    parent_genome2.dict_of_connections[connection.innovation_num].copy()
-                child_genome.dict_of_connections[0] = child_connection  # innovation number
+                child_connection = connection if bool(random.getrandbits(1)) else \
+                    parent_genome2.dict_of_connections[connection.innovation_num]
+                child_genome.dict_of_connections[len(child_genome.dict_of_connections)] = child_connection
             else:  # disjoint or exceed connection
-                child_genome.dict_of_connections[0] = connection.copy()  # innovation number
+                child_genome.dict_of_connections[len(child_genome.dict_of_connections)] = connection
 
         return child_genome
