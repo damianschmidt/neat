@@ -2,12 +2,24 @@ import random
 
 from NEAT.src.connection_gene import ConnectionGene
 from NEAT.src.node_gene import NodeGene
+from NEAT.src.innovation_generator import InnovationGenerator
 
 
 class Genome:
+    PROBABILITY_OF_PERTURBING = 0.9
+
     def __init__(self):
         self.dict_of_connections = {}
         self.dict_of_nodes = {}
+        self.con_innovation = InnovationGenerator()
+        self.node_innovation = InnovationGenerator()
+
+    def mutation(self):
+        for connection in self.dict_of_connections.values():
+            if random.random() < self.PROBABILITY_OF_PERTURBING:
+                connection.weight = connection.weight * random.uniform(-1, 1)
+            else:
+                connection.weight = random.uniform(-1, 1)
 
     # Structural Mutations
     def add_connection_mutation(self):
@@ -21,11 +33,11 @@ class Genome:
         if not connection_exist:
             if in_correct_order:
                 new_connection = ConnectionGene(node1.node_id, node2.node_id, random.random(), True,
-                                                len(self.dict_of_connections))  # No idea what is innovation number
+                                                self.con_innovation.get_innovation())  # No idea what is innovation number
                 self.dict_of_connections[new_connection.innovation_num] = new_connection
             else:
                 new_connection = ConnectionGene(node2.node_id, node1.node_id, random.random(), True,
-                                                len(self.dict_of_connections))
+                                                self.con_innovation.get_innovation())
                 self.dict_of_connections[new_connection.innovation_num] = new_connection
 
     def is_connection(self, node1, node2):
@@ -57,15 +69,15 @@ class Genome:
 
         connection_gene.disable_connection()
 
-        new_node = NodeGene('HIDDEN', len(self.dict_of_nodes))
+        new_node = NodeGene('HIDDEN', self.node_innovation.get_innovation())
         self.dict_of_nodes[new_node.node_id] = new_node
 
         # Connect existing nodes with new one
-        connection_in_to_new = ConnectionGene(in_node.node_id, new_node.node_id, 1.0, True, len(self.dict_of_connections))
+        connection_in_to_new = ConnectionGene(in_node.node_id, new_node.node_id, 1.0, True, self.con_innovation.get_innovation())
         self.dict_of_connections[connection_in_to_new.innovation_num] = connection_in_to_new
 
         connection_new_to_out = ConnectionGene(new_node.node_id, out_node.node_id, connection_gene.weight, True,
-                                               len(self.dict_of_connections))
+                                               self.con_innovation.get_innovation())
         self.dict_of_connections[connection_new_to_out.innovation_num] = connection_new_to_out
 
     # parent_genome1 is more fit of parent

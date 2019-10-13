@@ -46,18 +46,22 @@ class GenomeTestCase(unittest.TestCase):
 
     def test_add_node_mutation(self):
         genome = Genome()
+        genome.dict_of_connections[genome.con_innovation.get_innovation()] = ConnectionGene(0, 2, 0.5, True,
+                                                                                              genome.con_innovation.current_innovation)
+        genome.dict_of_connections[genome.con_innovation.get_innovation()] = ConnectionGene(1, 2, 0.5, True,
+                                                                                              genome.con_innovation.current_innovation)
 
-        genome.dict_of_connections[0] = ConnectionGene(0, 2, 0.5, True, 0)
-        genome.dict_of_connections[1] = ConnectionGene(1, 2, 0.5, True, 1)
-
-        genome.dict_of_nodes[0] = NodeGene('SENSOR', 0)
-        genome.dict_of_nodes[1] = NodeGene('SENSOR', 1)
-        genome.dict_of_nodes[2] = NodeGene('OUTPUT', 2)
+        genome.dict_of_nodes[genome.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                   genome.node_innovation.current_innovation)
+        genome.dict_of_nodes[genome.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                   genome.node_innovation.current_innovation)
+        genome.dict_of_nodes[genome.node_innovation.get_innovation()] = NodeGene('OUTPUT',
+                                                                                   genome.node_innovation.current_innovation)
 
         genome.add_node_mutation()
 
-        self.assertEqual(len(genome.dict_of_nodes), 4)
-        self.assertEqual(len(genome.dict_of_connections), 4)
+        self.assertEqual(4, len(genome.dict_of_nodes))
+        self.assertEqual(4, len(genome.dict_of_connections))
         self.assertEqual(genome.dict_of_nodes[3].node_type, 'HIDDEN')
 
     def test_crossover_without_connections(self):
@@ -66,14 +70,20 @@ class GenomeTestCase(unittest.TestCase):
         connection.
         """
         parent_genome1 = Genome()
-        parent_genome1.dict_of_nodes[0] = NodeGene('SENSOR', 0)
-        parent_genome1.dict_of_nodes[1] = NodeGene('SENSOR', 1)
-        parent_genome1.dict_of_nodes[2] = NodeGene('OUTPUT', 2)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('OUTPUT',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
 
         parent_genome2 = Genome()
-        parent_genome2.dict_of_nodes[0] = NodeGene('SENSOR', 0)
-        parent_genome2.dict_of_nodes[1] = NodeGene('SENSOR', 1)
-        parent_genome2.dict_of_nodes[2] = NodeGene('OUTPUT', 2)
+        parent_genome2.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                                   parent_genome2.node_innovation.current_innovation)
+        parent_genome2.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                                   parent_genome2.node_innovation.current_innovation)
+        parent_genome2.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('OUTPUT',
+                                                                                                   parent_genome2.node_innovation.current_innovation)
 
         genome = Genome()
         child_genome = genome.crossover(parent_genome1, parent_genome2)
@@ -87,24 +97,41 @@ class GenomeTestCase(unittest.TestCase):
         connection.
         """
         parent_genome1 = Genome()
-        parent_genome1.dict_of_nodes[0] = NodeGene('SENSOR', 0)
-        parent_genome1.dict_of_nodes[1] = NodeGene('SENSOR', 1)
-        parent_genome1.dict_of_nodes[2] = NodeGene('OUTPUT', 2)
-        parent_genome1.dict_of_nodes[3] = NodeGene('HIDDEN', 3)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('SENSOR',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('OUTPUT',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
+        parent_genome1.dict_of_nodes[parent_genome1.node_innovation.get_innovation()] = NodeGene('HIDDEN',
+                                                                                                   parent_genome1.node_innovation.current_innovation)
 
-        parent_genome1.dict_of_connections[0] = ConnectionGene(0, 2, 0.5, False, 0)
+        parent_genome1.dict_of_connections[parent_genome1.con_innovation.get_innovation()] = ConnectionGene(0, 2, 0.5,
+                                                                                                              False,
+                                                                                                              parent_genome1.con_innovation.current_innovation)
 
         parent_genome2 = Genome()
-        parent_genome2.dict_of_nodes[0] = NodeGene('SENSOR', 0)
-        parent_genome2.dict_of_nodes[1] = NodeGene('SENSOR', 1)
-        parent_genome2.dict_of_nodes[2] = NodeGene('OUTPUT', 2)
-        parent_genome1.dict_of_nodes[3] = NodeGene('HIDDEN', 3)
+        parent_genome2.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('SENSOR', parent_genome2.node_innovation.current_innovation)
+        parent_genome2.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('SENSOR', parent_genome2.node_innovation.current_innovation)
+        parent_genome2.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('OUTPUT', parent_genome2.node_innovation.current_innovation)
+        parent_genome1.dict_of_nodes[parent_genome2.node_innovation.get_innovation()] = NodeGene('HIDDEN', parent_genome2.node_innovation.current_innovation)
 
         genome = Genome()
         child_genome = genome.crossover(parent_genome1, parent_genome2)
 
         self.assertEqual(parent_genome1.dict_of_nodes, child_genome.dict_of_nodes)
         self.assertEqual(parent_genome1.dict_of_connections, child_genome.dict_of_connections)
+
+    def test_mutation(self):
+        genome = Genome()
+        genome.dict_of_connections[genome.con_innovation.get_innovation()] = ConnectionGene(0, 2, 0.5, True,
+                                                                                            genome.con_innovation.current_innovation)
+        genome.dict_of_connections[genome.con_innovation.get_innovation()] = ConnectionGene(1, 2, 0.5, True,
+                                                                                            genome.con_innovation.current_innovation)
+        genome.mutation()
+
+        self.assertNotEqual(0.5, genome.dict_of_connections[0].weight)
+        self.assertNotEqual(0.5, genome.dict_of_connections[1].weight)
 
 
 if __name__ == '__main__':
