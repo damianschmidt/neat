@@ -5,5 +5,11 @@
 - [X] Unit tests for structure mutations (nodes and connections)
 - [X] Unit tests for crossover
 - [X] Test somehow (maybe graphically) crossover function with matching connections
-- [X] Protecting Innovation through Speciation
+- [X] Count compatibility distance
 - [ ] Test utils
+- [ ] Refactor utils to loop only once through nodes and connections
+- [ ] Add evaluator (maybe Abstract Base Class)
+  - [ ] Place genomes into species
+  - [ ] Evaluate genomes and assign fitness
+  - [ ] Put best genomes from each species into next generation
+  - [ ] Breed the rest of the genomes
