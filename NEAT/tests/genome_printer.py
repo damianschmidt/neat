@@ -1,6 +1,10 @@
 from graphics import *
 from random import randint
 
+from NEAT.src.genome import Genome
+from NEAT.src.node_gene import NodeGene
+from NEAT.src.connection_gene import ConnectionGene
+
 
 class GenomePrinter:
     def __init__(self):
@@ -55,8 +59,8 @@ class GenomePrinter:
         input_counter = 0
         output_counter = 0
         for node in genome.dict_of_nodes.values():
-            if node.node_type == 'INPUT':
-                x = (self.window_width / (self.count_nodes_by_types(genome, 'INPUT') + 1)) * (input_counter + 1)
+            if node.node_type == 'SENSOR':
+                x = (self.window_width / (self.count_nodes_by_types(genome, 'SENSOR') + 1)) * (input_counter + 1)
                 y = self.window_height - 2 * self.node_size
                 input_counter += 1
                 node_positions[node.node_id] = Point(x, y)
@@ -89,3 +93,43 @@ class GenomePrinter:
                 counter += 1
 
         return counter
+
+
+if __name__ == '__main__':
+    genome_printer = GenomePrinter()
+
+    parent_genome1 = Genome()
+    parent_genome1.dict_of_nodes[1] = NodeGene('SENSOR', 1)
+    parent_genome1.dict_of_nodes[2] = NodeGene('SENSOR', 2)
+    parent_genome1.dict_of_nodes[3] = NodeGene('SENSOR', 3)
+    parent_genome1.dict_of_nodes[4] = NodeGene('OUTPUT', 4)
+    parent_genome1.dict_of_nodes[5] = NodeGene('HIDDEN', 5)
+    parent_genome1.dict_of_connections[1] = ConnectionGene(1, 4, 0.5, True, 1)
+    parent_genome1.dict_of_connections[2] = ConnectionGene(2, 4, 0.5, False, 2)
+    parent_genome1.dict_of_connections[3] = ConnectionGene(3, 4, 0.5, True, 3)
+    parent_genome1.dict_of_connections[4] = ConnectionGene(2, 5, 0.5, True, 4)
+    parent_genome1.dict_of_connections[5] = ConnectionGene(5, 4, 0.5, True, 5)
+    parent_genome1.dict_of_connections[8] = ConnectionGene(1, 5, 0.5, True, 8)
+    genome_printer.crossover_printer(parent_genome1)
+
+    parent_genome2 = Genome()
+    parent_genome2.dict_of_nodes[1] = NodeGene('SENSOR', 1)
+    parent_genome2.dict_of_nodes[2] = NodeGene('SENSOR', 2)
+    parent_genome2.dict_of_nodes[3] = NodeGene('SENSOR', 3)
+    parent_genome2.dict_of_nodes[4] = NodeGene('OUTPUT', 4)
+    parent_genome2.dict_of_nodes[5] = NodeGene('HIDDEN', 5)
+    parent_genome2.dict_of_nodes[6] = NodeGene('HIDDEN', 6)
+    parent_genome2.dict_of_connections[1] = ConnectionGene(1, 4, 0.5, True, 1)
+    parent_genome2.dict_of_connections[2] = ConnectionGene(2, 4, 0.5, False, 2)
+    parent_genome2.dict_of_connections[3] = ConnectionGene(3, 4, 0.5, True, 3)
+    parent_genome2.dict_of_connections[4] = ConnectionGene(2, 5, 0.5, True, 4)
+    parent_genome2.dict_of_connections[5] = ConnectionGene(5, 4, 0.5, False, 5)
+    parent_genome2.dict_of_connections[6] = ConnectionGene(5, 6, 0.5, True, 6)
+    parent_genome2.dict_of_connections[7] = ConnectionGene(6, 4, 0.5, True, 7)
+    parent_genome2.dict_of_connections[9] = ConnectionGene(3, 5, 0.5, True, 9)
+    parent_genome2.dict_of_connections[10] = ConnectionGene(1, 6, 0.5, True, 10)
+    genome_printer.crossover_printer(parent_genome2)
+
+    genome = Genome()
+    child_genome = genome.crossover(parent_genome2, parent_genome1)
+    genome_printer.crossover_printer(child_genome)
