@@ -14,3 +14,8 @@
   - [X] Put best genomes from each species into next generation
   - [X] Breed the rest of the genomes
 - [ ] Test evaluator
+- [ ] Create visualization of working NEAT (Species, Node and Connection structure etc.)
+- [ ] Connect with Neural Network to make decisions
+- [ ] Check on XOR that NEAT is working properly
+- [ ] Implement algorithm to FlappyBird
+- [ ] Implement algorithm to Sonic the Hedgehog
