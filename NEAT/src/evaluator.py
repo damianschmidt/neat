@@ -2,6 +2,7 @@ import random
 from abc import ABC, abstractmethod
 
 from NEAT.src import utils
+from NEAT.src.genome import Genome
 
 
 class Evaluator(ABC):
@@ -9,6 +10,9 @@ class Evaluator(ABC):
     C2 = 1.0
     C3 = 0.4
     SPECIES_THRESHOLD = 10.0
+    MUTATION_RATE = 0.5
+    ADD_CONNECTION_RATE = 0.1
+    ADD_NODE_RATE = 0.1
 
     def __init__(self, population_size, starting_genome, node_innovation, con_innovation):
         self.population_size = population_size
@@ -35,7 +39,28 @@ class Evaluator(ABC):
         self.remove_species_without_genomes()
         self.evaluate_genomes_and_assign_fitness()
         self.best_into_next_generation()
-        # Breed the rest of the genomes
+        self.breed_rest_of_genomes()
+        self.genomes = self.next_generation
+
+    def breed_rest_of_genomes(self):
+        while len(self.next_generation) < self.population_size:
+            species = self.get_random_species_biased_adjusted_fitness()
+            genome_parent1 = self.get_random_genome_biased_adjusted_fitness(species)
+            genome_parent2 = self.get_random_genome_biased_adjusted_fitness(species)
+            child = Genome()
+            if self.genome_fitness[genome_parent1] >= self.genome_fitness[genome_parent2]:
+                child = child.crossover(genome_parent1, genome_parent2)
+            else:
+                child = child.crossover(genome_parent2, genome_parent1)
+
+            if random.random() < self.MUTATION_RATE:
+                child.mutation()
+            if random.random() < self.ADD_CONNECTION_RATE:
+                child.add_connection_mutation()
+            if random.random < self.ADD_NODE_RATE:
+                child.add_node_mutation()
+
+            self.next_generation.append(child)
 
     def best_into_next_generation(self):
         for s in self.species:
@@ -82,8 +107,29 @@ class Evaluator(ABC):
         self.highest_score = 0
         self.fittest_genome = None
 
-    def get_random_genome_biased_adjusted_fitness(self):
-        pass
+    def get_random_species_biased_adjusted_fitness(self):
+        complete_fitness_of_species = 0.0
+        for s in self.species:
+            complete_fitness_of_species += s.total_adjusted_fitness
+
+        random_value = random.random() * complete_fitness_of_species
+        current_fitness = 0.0
+        for s in self.species:
+            current_fitness += s.total_adjusted_fitness
+            if current_fitness >= random_value:
+                return s
+
+    def get_random_genome_biased_adjusted_fitness(self, species):
+        complete_fitness_of_fitness_genomes = 0.0
+        for fitness_genome in species.fitness_population:
+            complete_fitness_of_fitness_genomes += fitness_genome.fitness
+
+        random_value = random.random() * complete_fitness_of_fitness_genomes
+        current_fitness = 0.0
+        for fitness_genome in species.fitness_population:
+            current_fitness += fitness_genome.fitness
+            if current_fitness >= random_value:
+                return fitness_genome.genome
 
     @abstractmethod
     def evaluate_genome(self, genome):

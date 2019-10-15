@@ -8,8 +8,9 @@
 - [X] Count compatibility distance
 - [ ] Test utils
 - [ ] Refactor utils to loop only once through nodes and connections
-- [ ] Add evaluator (maybe Abstract Base Class)
+- [X] Add evaluator (maybe Abstract Base Class)
   - [X] Place genomes into species
   - [X] Evaluate genomes and assign fitness
   - [X] Put best genomes from each species into next generation
-  - [ ] Breed the rest of the genomes
+  - [X] Breed the rest of the genomes
+- [ ] Test evaluator
