@@ -1,21 +1,14 @@
 import random
 from abc import ABC, abstractmethod
 
-from NEAT.src import utils
+from NEAT.src import genome_utils
 from NEAT.src.genome import Genome
+from NEAT.src.neat_conf import *
 
 
 class Evaluator(ABC):
-    C1 = 1.0
-    C2 = 1.0
-    C3 = 0.4
-    SPECIES_THRESHOLD = 10.0
-    MUTATION_RATE = 0.5
-    ADD_CONNECTION_RATE = 0.1
-    ADD_NODE_RATE = 0.1
-
-    def __init__(self, population_size, starting_genome, node_innovation, con_innovation):
-        self.population_size = population_size
+    def __init__(self, starting_genome, node_innovation, con_innovation):
+        self.population_size = POPULATION_SIZE
         self.node_innovation = node_innovation
         self.con_innovation = con_innovation
         self.genomes = self.list_of_stating_genomes(starting_genome)
@@ -53,11 +46,11 @@ class Evaluator(ABC):
             else:
                 child = child.crossover(genome_parent2, genome_parent1)
 
-            if random.random() < self.MUTATION_RATE:
+            if random.random() < MUTATION_RATE:
                 child.mutation()
-            if random.random() < self.ADD_CONNECTION_RATE:
+            if random.random() < ADD_CONNECTION_RATE:
                 child.add_connection_mutation()
-            if random.random < self.ADD_NODE_RATE:
+            if random.random < ADD_NODE_RATE:
                 child.add_node_mutation()
 
             self.next_generation.append(child)
@@ -87,7 +80,7 @@ class Evaluator(ABC):
             found_species = False
             for s in self.species:
                 # if compatibility distance is less than species threshold then genome belongs to species
-                if utils.compatibility_distance(genome, s.mascot, self.C1, self.C2, self.C3) < self.SPECIES_THRESHOLD:
+                if genome_utils.compatibility_distance(genome, s.mascot, C1, C2, C3) < SPECIES_THRESHOLD:
                     s.members.append(genome)
                     self.genome_species[genome] = s
                     found_species = True

@@ -3,11 +3,10 @@ import random
 from NEAT.src.connection_gene import ConnectionGene
 from NEAT.src.node_gene import NodeGene
 from NEAT.src.innovation_generator import InnovationGenerator
+from NEAT.src.neat_conf import PROBABILITY_OF_PERTURBING
 
 
 class Genome:
-    PROBABILITY_OF_PERTURBING = 0.9
-
     def __init__(self):
         self.dict_of_connections = {}
         self.dict_of_nodes = {}
@@ -16,7 +15,7 @@ class Genome:
 
     def mutation(self):
         for connection in self.dict_of_connections.values():
-            if random.random() < self.PROBABILITY_OF_PERTURBING:
+            if random.random() < PROBABILITY_OF_PERTURBING:
                 connection.weight = connection.weight * random.uniform(-1, 1)
             else:
                 connection.weight = random.uniform(-1, 1)
@@ -73,7 +72,8 @@ class Genome:
         self.dict_of_nodes[new_node.node_id] = new_node
 
         # Connect existing nodes with new one
-        connection_in_to_new = ConnectionGene(in_node.node_id, new_node.node_id, 1.0, True, self.con_innovation.get_innovation())
+        connection_in_to_new = ConnectionGene(in_node.node_id, new_node.node_id, 1.0, True,
+                                              self.con_innovation.get_innovation())
         self.dict_of_connections[connection_in_to_new.innovation_num] = connection_in_to_new
 
         connection_new_to_out = ConnectionGene(new_node.node_id, out_node.node_id, connection_gene.weight, True,
