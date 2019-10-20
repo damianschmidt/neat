@@ -16,7 +16,7 @@
 - [ ] Test utils
 - [ ] Refactor utils to loop only once through nodes and connections
 - [ ] Test evaluator
-- [ ] Add neuron representation
+- [X] Add neuron representation
 - [ ] Test neuron
 - [ ] Add Neural Network logic
 - [ ] Check Neural Network
