@@ -25,3 +25,4 @@
 - [ ] Check on XOR that NEAT is working properly
 - [ ] Implement algorithm to FlappyBird
 - [ ] Implement algorithm to Sonic the Hedgehog
+- [ ] Add code documentation
