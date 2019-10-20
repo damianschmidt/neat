@@ -28,5 +28,43 @@ class NeuralNetwork:
             out_node = self.neurons[connection.out_node]
             out_node.add_input_connections()
 
-    def calculate(self):
-        pass
+    def calculate(self, input_parameters):
+        if len(input_parameters) != len(self.input):
+            raise ValueError('Number of inputs must match number of input neurons in genome')
+
+        self.reset_network()
+        self.prepare_inputs(input_parameters)
+        outputs = self.solve_network()
+        return outputs
+
+    def solve_network(self):
+        loop = 0
+        while len(self.unprocessed) > 0:
+            loop += 1
+            if loop > 1000:
+                print('Can not solve the network')
+                return None
+
+            # iterate through the network and calculate neurons
+
+        # copy output from output neurons
+        outputs = []
+        return outputs
+
+    def prepare_inputs(self, input_parameters):
+        for i in range(len(input_parameters)):
+            input_neuron = self.neurons[self.input[i]]
+            input_neuron.feed_input(input_parameters[i])
+            input_neuron.calculate()  # ready for calculation cause inputs have only one input
+
+            for j in range(len(input_neuron.output_ids)):
+                receiver = self.neurons[input_neuron.output_ids[j]]
+                receiver.feed_input(input_neuron.output * input_neuron.output_weights[j])
+
+            self.unprocessed.remove(input_neuron)
+
+    def reset_network(self):
+        for neuron_id, neuron in self.neurons:
+            neuron.reset()
+        self.unprocessed = []
+        self.unprocessed.extend(self.neurons.values())

@@ -6,11 +6,11 @@ class Neuron:
         self.output = 0.0
         self.inputs = []
         self.output_ids = []
-        self.outputWeights = []
+        self.output_weights = []
 
     def add_output_connections(self, output_id, weight):
         self.output_ids.append(output_id)
-        self.outputWeights.append(weight)
+        self.output_weights.append(weight)
 
     def add_input_connections(self):
         self.inputs.append(None)
@@ -34,7 +34,7 @@ class Neuron:
     # Add input to the neuron in the first available slot
     def feed_input(self, new_input):
         found_slot = False
-        for i in range(len(self.inputs) + 1):
+        for i in range(len(self.inputs)):
             if self.inputs[i] is None:
                 self.inputs[i] = new_input
                 found_slot = True
