@@ -18,7 +18,7 @@
 - [ ] Test evaluator
 - [X] Add neuron representation
 - [ ] Test neuron
-- [ ] Add Neural Network logic
+- [X] Add Neural Network logic
 - [ ] Check Neural Network
 - [ ] Create visualization of working NEAT (Species, Node and Connection structure etc.)
 - [ ] Connect with Neural Network to make decisions
