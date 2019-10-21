@@ -3,8 +3,8 @@ from NEAT.src.neuron import Neuron
 
 class NeuralNetwork:
     def __init__(self, genome):
-        self.input = []
-        self.output = []
+        self.input = []  # ids of input neurons
+        self.output = []  # ids of output neurons
         self.neurons = {}
         self.unprocessed = []
 
@@ -46,9 +46,19 @@ class NeuralNetwork:
                 return None
 
             # iterate through the network and calculate neurons
+            for neuron in self.unprocessed:
+                if neuron.is_ready_to_calculate():
+                    neuron.calculate()
+                    for i in range(len(neuron.output_ids)):
+                        receiver_id = neuron.output_ids[i]
+                        receiver_val = neuron.output * neuron.output_weights[i]
+                        self.neurons[receiver_id].feed_input(receiver_val)
+            self.unprocessed = [neuron for neuron in self.unprocessed if neuron.is_ready_to_calculate()]
 
         # copy output from output neurons
         outputs = []
+        for i in range(len(self.output)):
+            outputs[i] = self.neurons[self.output[i]]
         return outputs
 
     def prepare_inputs(self, input_parameters):
