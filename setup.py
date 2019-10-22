@@ -9,4 +9,7 @@ setup(
     install_requires=[
         'graphics.py'
     ],
+    tests_require=[
+        'parameterized'
+    ],
 )

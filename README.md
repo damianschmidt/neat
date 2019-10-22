@@ -17,7 +17,7 @@
 - [ ] Refactor utils to loop only once through nodes and connections
 - [ ] Test evaluator
 - [X] Add neuron representation
-- [ ] Test neuron
+- [X] Test neuron
 - [X] Add Neural Network logic
 - [ ] Check Neural Network
 - [ ] Create visualization of working NEAT (Species, Node and Connection structure etc.)
