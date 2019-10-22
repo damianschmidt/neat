@@ -3,7 +3,7 @@ import random
 from NEAT.src.connection_gene import ConnectionGene
 from NEAT.src.node_gene import NodeGene
 from NEAT.src.innovation_generator import InnovationGenerator
-from NEAT.src.neat_conf import PROBABILITY_OF_PERTURBING
+from NEAT.src.neat_conf import Config
 
 
 class Genome:
@@ -15,7 +15,7 @@ class Genome:
 
     def mutation(self):
         for connection in self.dict_of_connections.values():
-            if random.random() < PROBABILITY_OF_PERTURBING:
+            if random.random() < Config.PROBABILITY_OF_PERTURBING:
                 connection.weight = connection.weight * random.uniform(-1, 1)
             else:
                 connection.weight = random.uniform(-1, 1)

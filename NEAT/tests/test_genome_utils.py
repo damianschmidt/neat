@@ -1,7 +1,7 @@
 import unittest
 
 
-class GenomeTestCase(unittest.TestCase):
+class GenomeUtilsTestCase(unittest.TestCase):
     def test_compatibility_distance(self):
         pass
 

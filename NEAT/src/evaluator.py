@@ -3,15 +3,15 @@ from abc import ABC, abstractmethod
 
 from NEAT.src import genome_utils
 from NEAT.src.genome import Genome
-from NEAT.src.neat_conf import *
+from NEAT.src.neat_conf import Config
 
 
 class Evaluator(ABC):
     def __init__(self, starting_genome, node_innovation, con_innovation):
-        self.population_size = POPULATION_SIZE
+        self.population_size = Config.POPULATION_SIZE
         self.node_innovation = node_innovation
         self.con_innovation = con_innovation
-        self.genomes = self.list_of_stating_genomes(starting_genome)
+        self.genomes = self.list_of_starting_genomes(starting_genome)
         self.next_generation = []
         self.genome_species = {}
         self.genome_fitness = {}
@@ -20,7 +20,7 @@ class Evaluator(ABC):
         self.fittest_genome = starting_genome
         super().__init__()
 
-    def list_of_stating_genomes(self, starting_genome):
+    def list_of_starting_genomes(self, starting_genome):
         list_of_genomes = []
         for i in range(self.population_size):
             list_of_genomes.append(starting_genome)
@@ -35,31 +35,34 @@ class Evaluator(ABC):
         self.breed_rest_of_genomes()
         self.genomes = self.next_generation
 
-    def breed_rest_of_genomes(self):
-        while len(self.next_generation) < self.population_size:
-            species = self.get_random_species_biased_adjusted_fitness()
-            genome_parent1 = self.get_random_genome_biased_adjusted_fitness(species)
-            genome_parent2 = self.get_random_genome_biased_adjusted_fitness(species)
-            child = Genome()
-            if self.genome_fitness[genome_parent1] >= self.genome_fitness[genome_parent2]:
-                child = child.crossover(genome_parent1, genome_parent2)
-            else:
-                child = child.crossover(genome_parent2, genome_parent1)
-
-            if random.random() < MUTATION_RATE:
-                child.mutation()
-            if random.random() < ADD_CONNECTION_RATE:
-                child.add_connection_mutation()
-            if random.random < ADD_NODE_RATE:
-                child.add_node_mutation()
-
-            self.next_generation.append(child)
-
-    def best_into_next_generation(self):
+    def reset_before_generation(self):
         for s in self.species:
-            reversed_fitness_population = s.fitness_population.sort(reverse=True)
-            fittest_in_species = reversed_fitness_population[0]
-            self.next_generation.append(fittest_in_species)
+            s.reset()
+        self.genome_fitness = {}
+        self.genome_species = {}
+        self.next_generation = []
+        self.highest_score = 0
+        self.fittest_genome = None
+
+    def place_genomes_into_species(self):
+        for genome in self.genomes:
+            found_species = False
+            for s in self.species:
+                # if compatibility distance is less than species threshold then genome belongs to species
+                if genome_utils.compatibility_distance(genome, s.mascot, Config.C1, Config.C2,
+                                                       Config.C3) < Config.SPECIES_THRESHOLD:
+                    s.members.append(genome)
+                    self.genome_species[genome] = s
+                    found_species = True
+                    break
+
+                if not found_species:  # if there is no species applied for genome, create new species
+                    new_species = self.Species(genome)
+                    self.species.append(new_species)
+                    self.genome_species[genome] = new_species
+
+    def remove_species_without_genomes(self):
+        self.species = [s for s in self.species if len(s.members) != 0]
 
     def evaluate_genomes_and_assign_fitness(self):
         for genome in self.genomes:
@@ -72,33 +75,34 @@ class Evaluator(ABC):
                 self.highest_score = score
                 self.fittest_genome = genome
 
-    def remove_species_without_genomes(self):
-        self.species = [s for s in self.species if len(s.members) != 0]
+    @abstractmethod
+    def evaluate_genome(self, genome):
+        pass
 
-    def place_genomes_into_species(self):
-        for genome in self.genomes:
-            found_species = False
-            for s in self.species:
-                # if compatibility distance is less than species threshold then genome belongs to species
-                if genome_utils.compatibility_distance(genome, s.mascot, C1, C2, C3) < SPECIES_THRESHOLD:
-                    s.members.append(genome)
-                    self.genome_species[genome] = s
-                    found_species = True
-                    break
-
-                if not found_species:  # if there is no species applied for genome, create new species
-                    new_species = self.Species(genome)
-                    self.species.append(new_species)
-                    self.genome_species[genome] = new_species
-
-    def reset_before_generation(self):
+    def best_into_next_generation(self):
         for s in self.species:
-            s.reset()
-        self.genome_fitness = {}
-        self.genome_species = {}
-        self.next_generation = []
-        self.highest_score = 0
-        self.fittest_genome = None
+            reversed_fitness_population = s.fitness_population.sort(reverse=True)
+            fittest_in_species = reversed_fitness_population[0]
+            self.next_generation.append(fittest_in_species)
+
+    def breed_rest_of_genomes(self):
+        while len(self.next_generation) < self.population_size:
+            species = self.get_random_species_biased_adjusted_fitness()
+            genome_parent1 = self.get_random_genome_biased_adjusted_fitness(species)
+            genome_parent2 = self.get_random_genome_biased_adjusted_fitness(species)
+            child = Genome()
+            if self.genome_fitness[genome_parent1] >= self.genome_fitness[genome_parent2]:
+                child = child.crossover(genome_parent1, genome_parent2)
+            else:
+                child = child.crossover(genome_parent2, genome_parent1)
+
+            if random.random() < Config.MUTATION_RATE:
+                child.mutation()
+            if random.random() < Config.ADD_CONNECTION_RATE:
+                child.add_connection_mutation()
+            if random.random < Config.ADD_NODE_RATE:
+                child.add_node_mutation()
+            self.next_generation.append(child)
 
     def get_random_species_biased_adjusted_fitness(self):
         complete_fitness_of_species = 0.0
@@ -123,10 +127,6 @@ class Evaluator(ABC):
             current_fitness += fitness_genome.fitness
             if current_fitness >= random_value:
                 return fitness_genome.genome
-
-    @abstractmethod
-    def evaluate_genome(self, genome):
-        pass
 
     class FitnessGenome:
         def __init__(self, genome, fitness):
