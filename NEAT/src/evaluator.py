@@ -45,9 +45,10 @@ class Evaluator(ABC):
         self.fittest_genome = None
 
     def place_genomes_into_species(self):
+        species = self.species.copy()
         for genome in self.genomes:
             found_species = False
-            for s in self.species:
+            for s in species:
                 # if compatibility distance is less than species threshold then genome belongs to species
                 if genome_utils.compatibility_distance(genome, s.mascot, Config.C1, Config.C2,
                                                        Config.C3) < Config.SPECIES_THRESHOLD:
@@ -69,8 +70,10 @@ class Evaluator(ABC):
             s = self.genome_species[genome]
             score = self.evaluate_genome(genome)
             adjust_score = score / len(self.genome_species[genome].members)
+            fitness_genome = Evaluator.FitnessGenome(genome, adjust_score)
             s.total_adjusted_fitness += adjust_score
-            self.fittest_genome[genome] = score
+            s.fitness_population.append(fitness_genome)
+            self.genome_fitness[genome] = score
             if score > self.highest_score:
                 self.highest_score = score
                 self.fittest_genome = genome
@@ -81,6 +84,7 @@ class Evaluator(ABC):
 
     def best_into_next_generation(self):
         for s in self.species:
+            # TODO: Sort by key FitnessGenome.fitness
             reversed_fitness_population = s.fitness_population.sort(reverse=True)
             fittest_in_species = reversed_fitness_population[0]
             self.next_generation.append(fittest_in_species)
