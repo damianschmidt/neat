@@ -13,13 +13,15 @@
   - [X] Breed the rest of the genomes
 - [X] Add NEAT configuration in one place
 - [ ] Look for package to drawing graphs (instead of genome printer)
-- [ ] Test utils
+- [X] Test genome utils
 - [ ] Refactor utils to loop only once through nodes and connections
 - [ ] Test evaluator
+  - [X] Test Species class
+  - [ ] Test Evaluator class
 - [X] Add neuron representation
 - [X] Test neuron
 - [X] Add Neural Network logic
-- [ ] Check Neural Network
+- [ ] Test Neural Network
 - [ ] Create visualization of working NEAT (Species, Node and Connection structure etc.)
 - [ ] Connect with Neural Network to make decisions
 - [ ] Check on XOR that NEAT is working properly

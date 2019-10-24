@@ -1,6 +1,7 @@
 import unittest
-from NEAT.src.genome import Genome
+
 from NEAT.src.evaluator import Evaluator
+from NEAT.src.genome import Genome
 
 
 class SpeciesTestCase(unittest.TestCase):
