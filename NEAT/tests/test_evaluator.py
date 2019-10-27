@@ -91,3 +91,7 @@ class EvaluatorTestCase(unittest.TestCase):
 
         result = [fit_pop1.genome, fit_pop4.genome]
         self.assertEqual(result, self.evaluator.next_generation)
+
+    # test for filling rest of next generation
+    # def test_breed_rest_of_genomes
+    # pass

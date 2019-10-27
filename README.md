@@ -17,7 +17,7 @@
 - [ ] Refactor utils to loop only once through nodes and connections
 - [ ] Test evaluator
   - [X] Test Species class
-  - [ ] Test Evaluator class
+  - [X] Test Evaluator class
 - [X] Add neuron representation
 - [X] Test neuron
 - [X] Add Neural Network logic
