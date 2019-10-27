@@ -74,7 +74,7 @@ class NeuralNetwork:
             self.unprocessed.remove(input_neuron)
 
     def reset_network(self):
-        for neuron_id, neuron in self.neurons:
+        for _, neuron in self.neurons.items():
             neuron.reset()
         self.unprocessed = []
         self.unprocessed.extend(self.neurons.values())
