@@ -22,8 +22,8 @@ class NeuralNetworkTestCase(unittest.TestCase):
         self.network.reset_network()
         self.assertEqual(2, len(self.network.unprocessed))
 
-    def test_prepare_inputs(self):
-        pass
-
-    def test_solve_network(self):
-        pass
+    # def test_prepare_inputs(self):
+    #     pass
+    #
+    # def test_solve_network(self):
+    #     pass

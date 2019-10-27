@@ -11,11 +11,13 @@
   - [X] Evaluate genomes and assign fitness
   - [X] Put best genomes from each species into next generation
   - [X] Breed the rest of the genomes
+  - [X] Add stagnation handling
+- [ ] Test stagnation handling
 - [X] Add NEAT configuration in one place
 - [ ] Look for package to drawing graphs (instead of genome printer)
 - [X] Test genome utils
 - [ ] Refactor utils to loop only once through nodes and connections
-- [ ] Test evaluator
+- [X] Test evaluator
   - [X] Test Species class
   - [X] Test Evaluator class
 - [X] Add neuron representation

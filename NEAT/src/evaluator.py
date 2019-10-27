@@ -17,8 +17,10 @@ class Evaluator(ABC):
         self.genome_species = {}
         self.genome_fitness = {}
         self.species = []
+        self.fitness_genomes = []
         self.highest_score = 0
         self.fittest_genome = starting_genome
+        self.stagnation = 0
         super().__init__()
 
     def list_of_starting_genomes(self, starting_genome):
@@ -28,11 +30,13 @@ class Evaluator(ABC):
         return list_of_genomes
 
     def evaluate(self):
+        self.stagnation += 1
         self.reset_before_generation()
         self.place_genomes_into_species()
         self.remove_species_without_genomes()
         self.evaluate_genomes_and_assign_fitness()
         self.best_into_next_generation()
+        self.remove_stagnation()
         self.breed_rest_of_genomes()
         self.genomes = self.next_generation
 
@@ -42,6 +46,7 @@ class Evaluator(ABC):
         self.genome_fitness = {}
         self.genome_species = {}
         self.next_generation = []
+        self.fitness_genomes = []
         self.highest_score = 0
         self.fittest_genome = None
 
@@ -74,8 +79,10 @@ class Evaluator(ABC):
             fitness_genome = Evaluator.FitnessGenome(genome, adjust_score)
             s.total_adjusted_fitness += adjust_score
             s.fitness_population.append(fitness_genome)
+            self.fitness_genomes.append(fitness_genome)
             self.genome_fitness[genome] = score
             if score > self.highest_score:
+                self.stagnation = 0
                 self.highest_score = score
                 self.fittest_genome = genome
 
@@ -88,6 +95,20 @@ class Evaluator(ABC):
             reversed_fitness_population = sorted(s.fitness_population, key=operator.attrgetter('fitness'), reverse=True)
             fittest_in_species = reversed_fitness_population[0]
             self.next_generation.append(fittest_in_species.genome)
+
+    def remove_stagnation(self):
+        if self.stagnation > Config.STAGNATION:
+            self.fitness_genomes = sorted(self.fitness_genomes, key=operator.attrgetter('fitness'), reverse=True)
+            for i in range(5, len(self.fitness_genomes)):
+                fitness_genome = self.fitness_genomes[i]
+                self.genomes.remove(fitness_genome.genome)
+                for species in self.species:
+                    species.members.remove(fitness_genome.genome)
+                    species.fitness_population.remove(fitness_genome)
+                    del self.genome_species[fitness_genome.genome]
+                    del self.genome_fitness[fitness_genome.genome]
+            self.remove_species_without_genomes()
+            self.stagnation = 0
 
     def breed_rest_of_genomes(self):
         while len(self.next_generation) < self.population_size:
