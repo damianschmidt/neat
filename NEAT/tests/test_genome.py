@@ -137,6 +137,18 @@ class GenomeTestCase(unittest.TestCase):
         self.assertNotEqual(0.5, genome.dict_of_connections[0].weight)
         self.assertNotEqual(0.5, genome.dict_of_connections[1].weight)
 
+    def test_add_node(self):
+        node = NodeGene('SENSOR', 0)
+        genome = Genome()
+        genome.add_node(node)
+        self.assertEqual(1, len(genome.dict_of_nodes))
+
+    def test_add_connection(self):
+        connection = ConnectionGene(0, 1, 1.0, True, 0)
+        genome = Genome()
+        genome.add_connection(connection)
+        self.assertEqual(1, len(genome.dict_of_connections))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -13,6 +13,12 @@ class Genome:
         self.con_innovation = InnovationGenerator()
         self.node_innovation = InnovationGenerator()
 
+    def add_node(self, node):
+        self.dict_of_nodes[node.node_id] = node
+
+    def add_connection(self, connection):
+        self.dict_of_connections[connection.innovation_num] = connection
+
     def mutation(self):
         for connection in self.dict_of_connections.values():
             if random.random() < Config.PROBABILITY_OF_PERTURBING:
