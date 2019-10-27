@@ -63,10 +63,8 @@ def count_excess_genes(genome1, genome2):
 
 
 def get_nodes_innovations_and_indices(genome1, genome2):
-    list_of_node_keys1 = [*genome1.dict_of_nodes]
-    list_of_node_keys1.sort()
-    list_of_node_keys2 = [*genome2.dict_of_nodes]
-    list_of_node_keys2.sort()
+    list_of_node_keys1 = sorted([*genome1.dict_of_nodes])
+    list_of_node_keys2 = sorted([*genome2.dict_of_nodes])
     highest_innovation1 = list_of_node_keys1[-1]
     highest_innovation2 = list_of_node_keys2[-1]
     indices = max(highest_innovation1, highest_innovation2)

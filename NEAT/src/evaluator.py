@@ -1,4 +1,5 @@
 import random
+import operator
 from abc import ABC, abstractmethod
 
 from NEAT.src import genome_utils
@@ -84,10 +85,9 @@ class Evaluator(ABC):
 
     def best_into_next_generation(self):
         for s in self.species:
-            # TODO: Sort by key FitnessGenome.fitness
-            reversed_fitness_population = s.fitness_population.sort(reverse=True)
+            reversed_fitness_population = sorted(s.fitness_population, key=operator.attrgetter('fitness'), reverse=True)
             fittest_in_species = reversed_fitness_population[0]
-            self.next_generation.append(fittest_in_species)
+            self.next_generation.append(fittest_in_species.genome)
 
     def breed_rest_of_genomes(self):
         while len(self.next_generation) < self.population_size:

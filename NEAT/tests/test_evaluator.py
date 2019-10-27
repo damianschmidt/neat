@@ -73,8 +73,21 @@ class EvaluatorTestCase(unittest.TestCase):
 
     def test_best_into_next_generation(self):
         species1 = Evaluator.Species(self.evaluator.genomes[0])
-        species2 = Evaluator.Species(self.evaluator.genomes[1])
-        pass
+        fit_pop1 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 15.0)
+        fit_pop2 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 12.0)
+        species1.fitness_population.append(fit_pop1)
+        species1.fitness_population.append(fit_pop2)
 
-    def test_breed_rest_of_genomes(self):
-        pass
+        species2 = Evaluator.Species(self.evaluator.genomes[1])
+        fit_pop3 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 11.0)
+        fit_pop4 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 14.0)
+        species2.fitness_population.append(fit_pop3)
+        species2.fitness_population.append(fit_pop4)
+
+        self.evaluator.species.append(species1)
+        self.evaluator.species.append(species2)
+
+        self.evaluator.best_into_next_generation()
+
+        result = [fit_pop1.genome, fit_pop4.genome]
+        self.assertEqual(result, self.evaluator.next_generation)
