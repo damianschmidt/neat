@@ -34,36 +34,29 @@ class XOR(Evaluator):
 
         for i in range(len(self.input)):
             inputs = [self.input[i][0], self.input[i][1], self.input[i][2]]
-            output = nn.calculate(inputs)
-
-            guess = output
-            distance = abs(self.correct_results[i] - guess)
+            outputs = nn.calculate(inputs)
+            distance = abs(self.correct_results[i] - outputs[0])
             total_distance += distance
         return 4.0 - total_distance
 
 
 if __name__ == '__main__':
     xor = XOR()
-    for j in range(10000):
+    for j in range(1000):
         xor.evaluate()
         print('Generation:', j)
         print('Highest fitness:', xor.highest_score)
         print('Amount of species:', len(xor.species))
         print('Connections in best performer:', len(xor.fittest_genome.dict_of_connections))
-        print('Guesses:', end=' ')
+        print('Guesses:')
 
         net = NeuralNetwork(xor.fittest_genome)
         for k in range(len(xor.input)):
-            net_input = [xor.input[k][0], xor.input[k][1], xor.input[k][2]]
-            net_output = None
-            try:
-                net_output = net.calculate(net_input)
-            except Exception as e:
-                print(e)
-                exit()
+            net_inputs = [xor.input[k][0], xor.input[k][1], xor.input[k][2]]
+            net_outputs = net.calculate(net_inputs)
 
-            print(xor.input[k][0], xor.input[k][1], net_output)
-            print()
+            print(xor.input[k][0], xor.input[k][1], net_outputs[0])
+        print()
 
 
 

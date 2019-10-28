@@ -30,6 +30,7 @@ class NeuralNetwork:
 
     def calculate(self, input_parameters):
         if len(input_parameters) != len(self.input):
+            print(len(input_parameters), len(self.input))
             raise ValueError('Number of inputs must match number of input neurons in genome')
 
         self.reset_network()
@@ -60,7 +61,7 @@ class NeuralNetwork:
         # copy output from output neurons
         outputs = []
         for i in range(len(self.output)):
-            outputs.append(self.neurons[self.output[i]])
+            outputs.append(self.neurons[self.output[i]].output)
         return outputs
 
     def prepare_inputs(self, input_parameters):

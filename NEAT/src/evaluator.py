@@ -53,10 +53,9 @@ class Evaluator(ABC):
         self.fittest_genome = None
 
     def place_genomes_into_species(self):
-        species = self.species.copy()
         for genome in self.genomes:
             found_species = False
-            for s in species:
+            for s in self.species:
                 # if compatibility distance is less than species threshold then genome belongs to species
                 if genome_utils.compatibility_distance(genome, s.mascot, Config.C1, Config.C2,
                                                        Config.C3) < Config.SPECIES_THRESHOLD:
@@ -127,7 +126,7 @@ class Evaluator(ABC):
                 child.mutation()
             if random.random() < Config.ADD_CONNECTION_RATE:
                 child.add_connection_mutation()
-            if random.random < Config.ADD_NODE_RATE:
+            if random.random() < Config.ADD_NODE_RATE:
                 child.add_node_mutation()
             self.next_generation.append(child)
 
