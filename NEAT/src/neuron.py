@@ -39,9 +39,8 @@ class Neuron:
                 self.inputs[i] = new_input
                 found_slot = True
                 break
-
         if not found_slot:
-            raise RuntimeError('No input slot ready for input')
+            raise RuntimeError(f'No input slot ready for input')
 
     def reset(self):
         self.inputs = [None for i in self.inputs]

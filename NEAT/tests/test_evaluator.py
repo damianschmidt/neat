@@ -2,8 +2,10 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from NEAT.src.evaluator import Evaluator
+from NEAT.src.fitness_genome import FitnessGenome
 from NEAT.src.genome import Genome
 from NEAT.src.innovation_generator import InnovationGenerator
+from NEAT.src.species import Species
 
 
 class TestEvaluator(Evaluator):
@@ -39,7 +41,7 @@ class EvaluatorTestCase(unittest.TestCase):
 
     @patch('NEAT.src.genome_utils.compatibility_distance', MagicMock(return_value=5.0))
     def test_place_genomes_into_species__found_species(self):
-        species = Evaluator.Species(self.evaluator.genomes[0])
+        species = Species(self.evaluator.genomes[0])
         self.evaluator.species.append(species)
         self.evaluator.place_genomes_into_species()
         self.assertEqual(1001, len(self.evaluator.species[0].members))
@@ -47,14 +49,14 @@ class EvaluatorTestCase(unittest.TestCase):
 
     @patch('NEAT.src.genome_utils.compatibility_distance', MagicMock(return_value=15.0))
     def test_place_genomes_into_species__not_found_species(self):
-        species = Evaluator.Species(self.evaluator.genomes[0])
+        species = Species(self.evaluator.genomes[0])
         self.evaluator.species.append(species)
         self.evaluator.place_genomes_into_species()
         self.assertEqual(1001, len(self.evaluator.species))
         self.assertEqual(1, len(self.evaluator.genome_species))
 
     def test_remove_species_without_genomes(self):
-        species = Evaluator.Species(self.evaluator.genomes[0])
+        species = Species(self.evaluator.genomes[0])
         species.members = []
         self.evaluator.species.append(species)
         self.evaluator.remove_species_without_genomes()
@@ -62,7 +64,7 @@ class EvaluatorTestCase(unittest.TestCase):
 
     @patch('NEAT.src.genome_utils.compatibility_distance', MagicMock(return_value=5.0))
     def test_evaluate_genomes_and_assign_fitness(self):
-        species = Evaluator.Species(self.evaluator.genomes[0])
+        species = Species(self.evaluator.genomes[0])
         self.evaluator.species.append(species)
         self.evaluator.place_genomes_into_species()
         self.evaluator.evaluate_genomes_and_assign_fitness()
@@ -72,15 +74,15 @@ class EvaluatorTestCase(unittest.TestCase):
         self.assertEqual(1, len(self.evaluator.genome_fitness))
 
     def test_best_into_next_generation(self):
-        species1 = Evaluator.Species(self.evaluator.genomes[0])
-        fit_pop1 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 15.0)
-        fit_pop2 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 12.0)
+        species1 = Species(self.evaluator.genomes[0])
+        fit_pop1 = FitnessGenome(self.evaluator.genomes[0], 15.0)
+        fit_pop2 = FitnessGenome(self.evaluator.genomes[0], 12.0)
         species1.fitness_population.append(fit_pop1)
         species1.fitness_population.append(fit_pop2)
 
-        species2 = Evaluator.Species(self.evaluator.genomes[1])
-        fit_pop3 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 11.0)
-        fit_pop4 = Evaluator.FitnessGenome(self.evaluator.genomes[0], 14.0)
+        species2 = Species(self.evaluator.genomes[1])
+        fit_pop3 = FitnessGenome(self.evaluator.genomes[0], 11.0)
+        fit_pop4 = FitnessGenome(self.evaluator.genomes[0], 14.0)
         species2.fitness_population.append(fit_pop3)
         species2.fitness_population.append(fit_pop4)
 

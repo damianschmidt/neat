@@ -8,11 +8,11 @@ from NEAT.src.node_gene import NodeGene
 
 class XOR(Evaluator):
     def __init__(self):
-        self.input = [[0.0, 0.0, 0.5],
-                      [1.0, 0.0, 0.5],
-                      [0.0, 1.0, 0.5],
-                      [1.0, 1.0, 0.5]]
-        self.correct_results = [0.0, 0.0, 1.0, 1.0]
+        self.input = [[0.0, 0.0, 1.0],
+                      [1.0, 0.0, 1.0],
+                      [0.0, 1.0, 1.0],
+                      [1.0, 1.0, 1.0]]
+        self.correct_results = [0.0, 1.0, 1.0, 0.0]
 
         self.node_innovation = InnovationGenerator()
         self.conn_innovation = InnovationGenerator()
@@ -21,16 +21,11 @@ class XOR(Evaluator):
         self.genome.add_node(NodeGene('SENSOR', self.node_innovation.get_innovation()))
         self.genome.add_node(NodeGene('SENSOR', self.node_innovation.get_innovation()))
         self.genome.add_node(NodeGene('SENSOR', self.node_innovation.get_innovation()))  # bias
-        self.genome.add_node(NodeGene('HIDDEN', self.node_innovation.get_innovation()))
         self.genome.add_node(NodeGene('OUTPUT', self.node_innovation.get_innovation()))
 
         self.genome.add_connection(ConnectionGene(0, 3, 1.0, True, self.conn_innovation.get_innovation()))
         self.genome.add_connection(ConnectionGene(1, 3, 1.0, True, self.conn_innovation.get_innovation()))
         self.genome.add_connection(ConnectionGene(2, 3, 1.0, True, self.conn_innovation.get_innovation()))
-        self.genome.add_connection(ConnectionGene(0, 4, 1.0, True, self.conn_innovation.get_innovation()))
-        self.genome.add_connection(ConnectionGene(1, 4, 1.0, True, self.conn_innovation.get_innovation()))
-        self.genome.add_connection(ConnectionGene(2, 4, 1.0, True, self.conn_innovation.get_innovation()))
-        self.genome.add_connection(ConnectionGene(3, 4, 1.0, True, self.conn_innovation.get_innovation()))
         super().__init__(self.genome, self.node_innovation, self.conn_innovation)
 
     def evaluate_genome(self, genome):
@@ -39,14 +34,7 @@ class XOR(Evaluator):
 
         for i in range(len(self.input)):
             inputs = [self.input[i][0], self.input[i][1], self.input[i][2]]
-            output = None
-            try:
-                output = nn.calculate(inputs)
-            except Exception as e:
-                print(e)
-
-            if output is None:
-                print('Network failed!')
+            output = nn.calculate(inputs)
 
             guess = output
             distance = abs(self.correct_results[i] - guess)
@@ -56,4 +44,26 @@ class XOR(Evaluator):
 
 if __name__ == '__main__':
     xor = XOR()
-    # xor.evaluate()
+    for j in range(10000):
+        xor.evaluate()
+        print('Generation:', j)
+        print('Highest fitness:', xor.highest_score)
+        print('Amount of species:', len(xor.species))
+        print('Connections in best performer:', len(xor.fittest_genome.dict_of_connections))
+        print('Guesses:', end=' ')
+
+        net = NeuralNetwork(xor.fittest_genome)
+        for k in range(len(xor.input)):
+            net_input = [xor.input[k][0], xor.input[k][1], xor.input[k][2]]
+            net_output = None
+            try:
+                net_output = net.calculate(net_input)
+            except Exception as e:
+                print(e)
+                exit()
+
+            print(xor.input[k][0], xor.input[k][1], net_output)
+            print()
+
+
+

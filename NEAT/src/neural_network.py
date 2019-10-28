@@ -46,6 +46,7 @@ class NeuralNetwork:
                 return None
 
             # iterate through the network and calculate neurons
+            filter_unprocessed = self.unprocessed.copy()
             for neuron in self.unprocessed:
                 if neuron.is_ready_to_calculate():
                     neuron.calculate()
@@ -53,12 +54,13 @@ class NeuralNetwork:
                         receiver_id = neuron.output_ids[i]
                         receiver_val = neuron.output * neuron.output_weights[i]
                         self.neurons[receiver_id].feed_input(receiver_val)
-            self.unprocessed = [neuron for neuron in self.unprocessed if neuron.is_ready_to_calculate()]
+                    filter_unprocessed.remove(neuron)
+            self.unprocessed = filter_unprocessed
 
         # copy output from output neurons
         outputs = []
         for i in range(len(self.output)):
-            outputs[i] = self.neurons[self.output[i]]
+            outputs.append(self.neurons[self.output[i]])
         return outputs
 
     def prepare_inputs(self, input_parameters):

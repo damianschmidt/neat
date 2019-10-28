@@ -1,10 +1,12 @@
-import random
 import operator
+import random
 from abc import ABC, abstractmethod
 
 from NEAT.src import genome_utils
+from NEAT.src.fitness_genome import FitnessGenome
 from NEAT.src.genome import Genome
 from NEAT.src.neat_conf import Config
+from NEAT.src.species import Species
 
 
 class Evaluator(ABC):
@@ -63,10 +65,10 @@ class Evaluator(ABC):
                     found_species = True
                     break
 
-                if not found_species:  # if there is no species applied for genome, create new species
-                    new_species = self.Species(genome)
-                    self.species.append(new_species)
-                    self.genome_species[genome] = new_species
+            if not found_species:  # if there is no species applied for genome, create new species
+                new_species = Species(genome)
+                self.species.append(new_species)
+                self.genome_species[genome] = new_species
 
     def remove_species_without_genomes(self):
         self.species = [s for s in self.species if len(s.members) != 0]
@@ -76,7 +78,7 @@ class Evaluator(ABC):
             s = self.genome_species[genome]
             score = self.evaluate_genome(genome)
             adjust_score = score / len(self.genome_species[genome].members)
-            fitness_genome = Evaluator.FitnessGenome(genome, adjust_score)
+            fitness_genome = FitnessGenome(genome, adjust_score)
             s.total_adjusted_fitness += adjust_score
             s.fitness_population.append(fitness_genome)
             self.fitness_genomes.append(fitness_genome)
@@ -152,22 +154,3 @@ class Evaluator(ABC):
             current_fitness += fitness_genome.fitness
             if current_fitness >= random_value:
                 return fitness_genome.genome
-
-    class FitnessGenome:
-        def __init__(self, genome, fitness):
-            self.genome = genome
-            self.fitness = fitness
-
-    class Species:
-        def __init__(self, mascot):
-            self.mascot = mascot
-            self.members = [self.mascot]
-            self.fitness_population = []
-            self.total_adjusted_fitness = 0.0
-
-        def reset(self):
-            new_mascot_index = random.randint(0, len(self.members) - 1)
-            self.mascot = self.members[new_mascot_index]
-            self.members = [self.mascot]
-            self.fitness_population = []
-            self.total_adjusted_fitness = 0.0
