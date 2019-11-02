@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from NEAT.src.evaluator import Evaluator
-from NEAT.src.fitness_genome import FitnessGenome
-from NEAT.src.genome import Genome
-from NEAT.src.innovation_generator import InnovationGenerator
-from NEAT.src.species import Species
+from NEAT_conventional.src.evaluator import Evaluator
+from NEAT_conventional.src.fitness_genome import FitnessGenome
+from NEAT_conventional.src.genome import Genome
+from NEAT_conventional.src.innovation_generator import InnovationGenerator
+from NEAT_conventional.src.species import Species
 
 
 class TestEvaluator(Evaluator):
@@ -39,7 +39,7 @@ class EvaluatorTestCase(unittest.TestCase):
         self.assertEqual(0, self.evaluator.highest_score)
         self.assertEqual(None, self.evaluator.fittest_genome)
 
-    @patch('NEAT.src.genome_utils.compatibility_distance', MagicMock(return_value=5.0))
+    @patch('NEAT_conventional.src.genome_utils.compatibility_distance', MagicMock(return_value=5.0))
     def test_place_genomes_into_species__found_species(self):
         species = Species(self.evaluator.genomes[0])
         self.evaluator.species.append(species)
@@ -47,7 +47,7 @@ class EvaluatorTestCase(unittest.TestCase):
         self.assertEqual(1001, len(self.evaluator.species[0].members))
         self.assertEqual(1, len(self.evaluator.genome_species))
 
-    @patch('NEAT.src.genome_utils.compatibility_distance', MagicMock(return_value=15.0))
+    @patch('NEAT_conventional.src.genome_utils.compatibility_distance', MagicMock(return_value=15.0))
     def test_place_genomes_into_species__not_found_species(self):
         species = Species(self.evaluator.genomes[0])
         self.evaluator.species.append(species)
@@ -62,7 +62,7 @@ class EvaluatorTestCase(unittest.TestCase):
         self.evaluator.remove_species_without_genomes()
         self.assertEqual(0, len(self.evaluator.species))
 
-    @patch('NEAT.src.genome_utils.compatibility_distance', MagicMock(return_value=5.0))
+    @patch('NEAT_conventional.src.genome_utils.compatibility_distance', MagicMock(return_value=5.0))
     def test_evaluate_genomes_and_assign_fitness(self):
         species = Species(self.evaluator.genomes[0])
         self.evaluator.species.append(species)

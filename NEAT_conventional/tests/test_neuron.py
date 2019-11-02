@@ -2,7 +2,7 @@ import unittest
 
 from parameterized import parameterized
 
-from NEAT.src.neuron import Neuron
+from NEAT_conventional.src.neuron import Neuron
 
 
 class NeuronTestCase(unittest.TestCase):

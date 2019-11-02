@@ -1,8 +1,8 @@
 import unittest
 from parameterized import parameterized
-from NEAT.src.node_gene import NodeGene
-from NEAT.src.connection_gene import ConnectionGene
-from NEAT.src.genome import Genome
+from NEAT_conventional.src.node_gene import NodeGene
+from NEAT_conventional.src.connection_gene import ConnectionGene
+from NEAT_conventional.src.genome import Genome
 
 
 class GenomeTestCase(unittest.TestCase):

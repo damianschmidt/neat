@@ -1,4 +1,4 @@
-from NEAT.src.neuron import Neuron
+from NEAT_conventional.src.neuron import Neuron
 
 
 class NeuralNetwork:
@@ -29,6 +29,7 @@ class NeuralNetwork:
             out_node.add_input_connections()
 
     def calculate(self, input_parameters):
+        print(self.input)
         if len(input_parameters) != len(self.input):
             print(len(input_parameters), len(self.input))
             raise ValueError('Number of inputs must match number of input neurons in genome')

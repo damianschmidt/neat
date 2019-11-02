@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='NEAT',
+    name='NEAT_conventional',
     version='1.0.0',
     author='Damian Schmidt',
     author_email='damian.schmidt97@gmail.com',

@@ -1,9 +1,10 @@
-from NEAT.src.connection_gene import ConnectionGene
-from NEAT.src.evaluator import Evaluator
-from NEAT.src.genome import Genome
-from NEAT.src.innovation_generator import InnovationGenerator
-from NEAT.src.neural_network import NeuralNetwork
-from NEAT.src.node_gene import NodeGene
+from NEAT_conventional.src.connection_gene import ConnectionGene
+from NEAT_conventional.src.evaluator import Evaluator
+from NEAT_conventional.src.genome import Genome
+from NEAT_conventional.src.innovation_generator import InnovationGenerator
+from NEAT_conventional.src.neural_network import NeuralNetwork
+from NEAT_conventional.src.node_gene import NodeGene
+from NEAT_conventional.tests.genome_printer import GenomePrinter
 
 
 class XOR(Evaluator):
@@ -32,12 +33,18 @@ class XOR(Evaluator):
         total_distance = 0
         nn = NeuralNetwork(genome)
 
-        for i in range(len(self.input)):
-            inputs = [self.input[i][0], self.input[i][1], self.input[i][2]]
-            outputs = nn.calculate(inputs)
-            distance = abs(self.correct_results[i] - outputs[0])
-            total_distance += distance
-        return 4.0 - total_distance
+        try:
+            for i in range(len(self.input)):
+                inputs = [self.input[i][0], self.input[i][1], self.input[i][2]]
+                outputs = nn.calculate(inputs)
+                distance = abs(self.correct_results[i] - outputs[0])
+                total_distance += distance
+            return 4.0 - total_distance
+        except:
+            gp = GenomePrinter()
+            gp.crossover_printer(genome)
+            for a in genome.dict_of_nodes.values():
+                print(a.node_type)
 
 
 if __name__ == '__main__':

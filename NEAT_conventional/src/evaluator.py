@@ -2,11 +2,11 @@ import operator
 import random
 from abc import ABC, abstractmethod
 
-from NEAT.src import genome_utils
-from NEAT.src.fitness_genome import FitnessGenome
-from NEAT.src.genome import Genome
-from NEAT.src.neat_conf import Config
-from NEAT.src.species import Species
+from NEAT_conventional.src import genome_utils
+from NEAT_conventional.src.fitness_genome import FitnessGenome
+from NEAT_conventional.src.genome import Genome
+from NEAT_conventional.src.neat_conf import Config
+from NEAT_conventional.src.species import Species
 
 
 class Evaluator(ABC):

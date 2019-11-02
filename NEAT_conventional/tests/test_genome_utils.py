@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from NEAT.src import genome_utils
-from NEAT.src.genome import Genome
-from NEAT.src.node_gene import NodeGene
-from NEAT.src.connection_gene import ConnectionGene
+from NEAT_conventional.src import genome_utils
+from NEAT_conventional.src.genome import Genome
+from NEAT_conventional.src.node_gene import NodeGene
+from NEAT_conventional.src.connection_gene import ConnectionGene
 
 
 class GenomeUtilsTestCase(unittest.TestCase):
@@ -39,9 +39,9 @@ class GenomeUtilsTestCase(unittest.TestCase):
         self.genome2.dict_of_connections[9] = ConnectionGene(3, 5, 0.4, True, 9)
         self.genome2.dict_of_connections[10] = ConnectionGene(1, 6, 0.4, True, 10)
 
-    @patch('NEAT.src.genome_utils.count_excess_genes', MagicMock(return_value=1))
-    @patch('NEAT.src.genome_utils.count_disjoint_genes', MagicMock(return_value=2))
-    @patch('NEAT.src.genome_utils.average_weight_diff', MagicMock(return_value=3.0))
+    @patch('NEAT_conventional.src.genome_utils.count_excess_genes', MagicMock(return_value=1))
+    @patch('NEAT_conventional.src.genome_utils.count_disjoint_genes', MagicMock(return_value=2))
+    @patch('NEAT_conventional.src.genome_utils.average_weight_diff', MagicMock(return_value=3.0))
     def test_compatibility_distance(self):
         result = genome_utils.compatibility_distance(self.genome1, self.genome2, 1.0, 2.0, 3.0)
         self.assertEqual(14.0, result)
