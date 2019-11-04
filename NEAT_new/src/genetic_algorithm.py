@@ -95,14 +95,15 @@ class GeneticAlgorithm:
                 champion = g
         return champion
 
-    def crossover(self, genome1, genome2, child_id):
-        con_genome1 = len(genome1.connections)
-        con_genome2 = len(genome2.connections)
+    @staticmethod
+    def crossover(genome1, genome2, child_id):
+        n_genome1 = len(genome1.connections)
+        n_genome2 = len(genome2.connections)
 
         if genome1.fitness == genome2.fitness:
-            if con_genome1 == con_genome2:
+            if n_genome1 == n_genome2:
                 better_genome = (genome1, genome2)[randint(0, 1)]
-            elif con_genome1 < con_genome2:
+            elif n_genome1 < n_genome2:
                 better_genome = genome1
             else:
                 better_genome = genome2
@@ -117,9 +118,9 @@ class GeneticAlgorithm:
         # iterate through parents genes
         it_genome1, it_genome2 = 0, 0
         node_ids = set()
-        while it_genome1 < con_genome1 or it_genome2 < con_genome2:
-            genome1_gene = genome1.connections[it_genome1] if it_genome1 < con_genome1 else None
-            genome2_gene = genome2.connections[it_genome2] if it_genome2 < con_genome2 else None
+        while it_genome1 < n_genome1 or it_genome2 < n_genome2:
+            genome1_gene = genome1.connections[it_genome1] if it_genome1 < n_genome1 else None
+            genome2_gene = genome2.connections[it_genome2] if it_genome2 < n_genome2 else None
             selected_gene = None
             if genome1_gene and genome2_gene:
                 if genome1_gene.innovation_num == genome2_gene.innovation_num:
@@ -156,7 +157,7 @@ class GeneticAlgorithm:
 
             # add gene only when it has not already been added
             if selected_gene and len(child_connections) and child_connections[
-               len(child_connections) - 1].innovation_num == selected_gene.innovation_num:
+                len(child_connections) - 1].innovation_num == selected_gene.innovation_num:
                 print('Gene has been already added!')
                 selected_gene = None
 
@@ -191,3 +192,49 @@ class GeneticAlgorithm:
         child = Genome(child_id, innovation_set, child_nodes, child_connections, inputs_num, outputs_num)
 
         return child
+
+    @staticmethod
+    def compatibility_score(genome1, genome2):
+        n_match, n_disjoint, n_excess = 0, 0, 0
+        weight_difference = 0.0
+
+        n_genome1 = len(genome1.connections)
+        n_genome2 = len(genome2.connections)
+        it_genome1, it_genome2 = 0, 0
+
+        while it_genome1 < n_genome1 or it_genome2 < n_genome2:
+            # excess
+            if it_genome1 == n_genome1:
+                n_excess += 1
+                it_genome2 += 1
+                continue
+
+            if it_genome2 == n_genome2:
+                n_excess += 1
+                it_genome1 += 1
+                continue
+
+            con1 = genome1.connections[it_genome1]
+            con2 = genome2.connections[it_genome2]
+
+            # match
+            if con1.innovation_num == con2.innovation_num:
+                n_match += 1
+                it_genome1 += 1
+                it_genome2 += 1
+                weight_difference += abs(con1.weight - con2.weight)
+                continue
+
+            # disjoint
+            if con1.innovation_num < con2.innovation_num:
+                n_disjoint += 1
+                it_genome1 += 1
+
+            if con1.innovation_num > con2.innovation_num:
+                n_disjoint += 1
+                it_genome2 += 1
+                continue
+        c1, c2, c3 = 1.0, 1.0, 0.4
+        n_match += 1
+        score = (c1 * n_excess + c2 * n_disjoint) / max(n_genome1, n_genome2) + c3 * weight_difference / n_match
+        return score
