@@ -1,7 +1,5 @@
 from random import randint, random
 
-import numpy as np
-
 from NEAT_new.src.connection import ConnectionGene
 from NEAT_new.src.innovation import InnovationType
 from NEAT_new.src.node import NodeGene
@@ -141,4 +139,3 @@ class Genome:
                  f'Hidden nodes {len(self.get_hidden_nodes())} \n' \
                  f'Output nodes {len(self.get_output_nodes())} \n'
         return string
-
