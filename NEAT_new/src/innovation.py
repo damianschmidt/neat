@@ -12,7 +12,7 @@ class Innovation:
         self.connection_id = connection_id
 
 
-class InnovationDB:
+class InnovationSet:
     def __init__(self):
         self.innovations = []
         self.next_innovation_num = 0

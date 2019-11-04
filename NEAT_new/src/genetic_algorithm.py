@@ -1,4 +1,4 @@
-from NEAT_new.src.innovation import InnovationDB
+from NEAT_new.src.innovation import InnovationSet
 
 
 class GeneticAlgorithm:
@@ -7,7 +7,7 @@ class GeneticAlgorithm:
         self.species = []
         self.bests = []
         self.best_ever = None
-        self.innovation_db = InnovationDB()
+        self.innovation_set = InnovationSet()
         self.task = task
         self.generation = 0
 
