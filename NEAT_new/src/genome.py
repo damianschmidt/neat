@@ -46,6 +46,9 @@ class Genome:
     def get_hidden_nodes(self):
         return [x for x in self.nodes if x.node_type == NodeType.HIDDEN]
 
+    def get_bias_input_output_nodes(self):
+        return [x for x in self.nodes if x.type == NodeType.INPUT or x.type == NodeType.BIAS or x.type == NodeType.OUTPUT]
+
     def exist_node(self, node_id):
         for node in self.nodes:
             if node.node_id == node_id:

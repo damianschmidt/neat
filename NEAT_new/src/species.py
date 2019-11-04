@@ -6,12 +6,10 @@ class Species:
         self.members = []
         self.species_id = species_id
         self.gen_not_improved = 0
+        self.spawns_required = 0
         self.age = 0
         self.max_fitness = 0.0
         self.avg_fitness = 0.0
-
-        # parameters
-        self.threshold = 10.0
 
     def add_member(self, member):
         member.species_id = self.species_id
