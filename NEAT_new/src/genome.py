@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, random
 
 import numpy as np
 
@@ -22,9 +22,13 @@ class Genome:
         # parameters
         self.tries_to_find_unconnected_nodes = 5
 
-        self.mutation_rate = 0.8
+        self.weight_mutation_rate = 0.8
+        self.reset_weight_rate = 0.1
+        self.max_weight_perturbation = 0.5
         self.add_connection_rate = 0.05
         self.add_node_rate = 0.03
+        self.activation_mutation_rate = 0.1
+        self.max_activation_perturbation = 0.1
 
         if nodes is not None:
             self.nodes.sort(key=lambda x: x.node_id)
@@ -102,9 +106,39 @@ class Genome:
             return None
 
         innovation = self.innovation_set.get_innovation(InnovationType.CONNECTION, node1.node_id, node2.node_id)
-        weight = np.random.normal(0, 2.0)
+        weight = random() * 2 - 1
         connection = ConnectionGene(node1.node_id, node2.node_id, innovation.innovation_num, weight=weight)
         return connection
 
     def mutation(self):
-        pass
+        # add node
+        if random() < self.add_node_rate:
+            self.add_node()
+
+        # add connection
+        if random() < self.add_connection_rate:
+            self.add_connection()
+
+        # mutate weights
+        for con in self.connections:
+            if random() < self.weight_mutation_rate:
+                if random() < self.reset_weight_rate:
+                    con.weight = random() * 2 - 1
+                else:
+                    con.weight += (random() * 2 - 1) * self.max_weight_perturbation
+
+        # mutate activation response
+        for node in self.nodes:
+            if random() > self.activation_mutation_rate:
+                node.activation_response += (random() * 2 - 1) * self.max_activation_perturbation
+
+    def __str__(self):
+        string = f'Genome {self.genome_id} {self.fitness} \n' \
+                 f'Inputs {self.inputs_num} \n' \
+                 f'Outputs {self.outputs_num} \n' \
+                 f'Bias nodes {len(self.get_bias_nodes())} \n' \
+                 f'Input nodes {len(self.get_input_nodes())} \n' \
+                 f'Hidden nodes {len(self.get_hidden_nodes())} \n' \
+                 f'Output nodes {len(self.get_output_nodes())} \n'
+        return string
+
