@@ -11,7 +11,12 @@ class Species:
         self.avg_fitness = 0.0
 
         # parameters
-        self.threshold = 10
+        self.threshold = 10.0
 
     def add_member(self, member):
-        pass
+        member.species_id = self.species_id
+        self.members.append(member)
+
+    def __str__(self):
+        string = f'Species: id {self.species_id}, age {self.age}'
+        return string
