@@ -63,11 +63,7 @@ class GeneticAlgorithm:
         # create basic population / initial birth
         self.create_basic_population()
         # create new phenotypes and evaluate network
-        for g in self.genomes:
-            network = g.create_pheontype()  # TODO: has to be done
-            fitness, solved = self.task.evaluate(network)
-            g.fitness = fitness
-            g.solved = int(solved)
+        self.create_phenotype_and_evaluate()
         # sort genomes reverse by fitness
         self.sort_genomes_reverse_by_fitness()
         # update best
@@ -86,6 +82,13 @@ class GeneticAlgorithm:
         print(self)
 
         # TODO: visualize
+
+    def create_phenotype_and_evaluate(self):
+        for g in self.genomes:
+            network = g.create_pheontype()
+            fitness, solved = self.task.evaluate(network)
+            g.fitness = fitness
+            g.solved = int(solved)
 
     def update_species(self):
         for s in self.species:
