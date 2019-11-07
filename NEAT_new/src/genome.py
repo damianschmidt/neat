@@ -16,6 +16,7 @@ class Genome:
         self.outputs_num = outputs_num
         self.fitness = 0.0
         self.species_id = None
+        self.adjusted_fitness = 0.0
 
         # parameters
         self.tries_to_find_unconnected_nodes = 5

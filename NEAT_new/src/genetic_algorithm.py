@@ -1,10 +1,12 @@
 import os
 import shutil
+import time
 from copy import deepcopy
 from random import randint, choice
 
 from NEAT_new.src.genome import Genome
 from NEAT_new.src.innovation import InnovationSet
+from NEAT_new.src.species import Species
 
 
 class GeneticAlgorithm:
@@ -12,20 +14,25 @@ class GeneticAlgorithm:
         self.genomes = []
         self.species = []
         self.bests = []
-        self.best_ever = None
+        self.best = None
+        self.best_previous = None
         self.innovation_set = InnovationSet()
         self.task = task
         self.generation = 0
-        self.pool = None
 
         self.next_genome_id = 0
         self.next_species_id = 0
+
+        self.init_time = time.time()
+        self.last_time = time.time()
 
         # parameters
         self.population_size = 100
         self.number_generation_allowed_to_not_improve = 20
         self.crossover_rate = 0.7
         self.survival_rate = 0.3
+        self.compatibility_threshold = 3.0
+        self.target_species = 30
 
     def initialize(self):
         if not hasattr(self.task, 'name'):
@@ -50,13 +57,122 @@ class GeneticAlgorithm:
             s.spawns_required = int(round(self.population_size * s.average_fitness / total_average))
 
         # remove stagnated species and species with no offsprings
+        self.clear_species()
+        # reproduction
+        self.reproduction()
+        # create basic population / initial birth
+        self.create_basic_population()
+        # create new phenotypes and evaluate network
+        for g in self.genomes:
+            network = g.create_pheontype()  # TODO: has to be done
+            fitness, solved = self.task.evaluate(network)
+            g.fitness = fitness
+            g.solved = int(solved)
+        # sort genomes reverse by fitness
+        self.sort_genomes_reverse_by_fitness()
+        # update best
+        self.update_best()
+        # assign genomes to species
+        self.assign_genomes_to_species()
+        # remove empty species
+        self.remove_empty_species()
+        # adjust compatibility_threshold
+        self.adjust_compatibility_threshold()
+        # sort members by fitness, adjust fitness, average_fitness and max_fitness
+        self.update_species()
+        # update statistics
+        self.update_statistics()
+        # print representation
+        print(self)
+
+        # TODO: visualize
+
+    def update_species(self):
+        for s in self.species:
+            # sort members of species reverse by fitness
+            s.members.sort(key=lambda x: x.fitness, reverse=True)
+            s.leader_old = s.leader
+            s.leader = s.members[0]
+
+            if s.leader.fitness > s.max_fitness:
+                s.generations_not_improved = 0
+            else:
+                s.generations_not_improved += 1
+            s.max_fitness = s.leader.fitness
+
+            # should I boost young species and punish old?
+            self.boost_punish_species(s)
+
+    @staticmethod
+    def boost_punish_species(s):
+        sum_fitness = 0.0
+        for member in s.members:
+            fitness = member.fitness
+            sum_fitness += fitness
+            # bonus to young species
+            if s.age < 10:
+                fitness *= 1.3
+            # punish for old species
+            elif s.age > 50:
+                fitness *= 0.7
+            member.adjusted_fitness = fitness / len(s.members)
+        s.average_fitness = sum_fitness / len(s.members)
+
+    def update_statistics(self):
+        for s in self.species:
+            while len(self.statistics['species']) <= s.species_id:
+                self.statistics['species'].append([])
+            stat_data = [self.generation, len(s.members), s.leader.fitness, s.leader.solved]
+            self.statistics['species'][s.species_id].append(stat_data)
+
+    def adjust_compatibility_threshold(self):
+        if len(self.species) < self.target_species:
+            self.compatibility_threshold *= 0.95
+        elif len(self.species) > self.target_species:
+            self.compatibility_threshold *= 1.05
+
+    def remove_empty_species(self):
+        self.species[:] = filter(lambda s: len(s.members) > 0, self.species)
+
+    def assign_genomes_to_species(self):
+        for g in self.genomes:
+            added_to_species = False
+            for s in self.species:
+                # add to existing if fit
+                compatibility_score = self.compatibility_score(g, s.leader)
+                if compatibility_score <= self.compatibility_threshold:
+                    s.add_member(g)
+                    added_to_species = True
+                    break
+
+            if not added_to_species:
+                s = Species(g, self.next_species_id)
+                self.next_species_id += 1
+                self.species.append(s)
+
+    def update_best(self):
+        self.best_previous = self.best
+        if self.best is None or self.best.fitness < self.genomes[0].fitness:
+            self.best = self.genomes[0]
+
+    def sort_genomes_reverse_by_fitness(self):
+        self.genomes.sort(key=lambda x: x.fitness, reverse=True)
+
+    def create_basic_population(self):
+        while len(self.genomes) < self.population_size:
+            genome = Genome(self.next_genome_id, self.innovation_set, None, None, self.task.inputs_num,
+                            self.task.outputs_num)
+            self.genomes.append(genome)
+            self.next_genome_id += 1
+
+    def clear_species(self):
         species = []
         for s in self.species:
             if s.generations_not_improved < self.number_generation_allowed_to_not_improve and s.spawns_required > 0:
                 species.append(s)
         self.species[:] = species
 
-        # reproduction
+    def reproduction(self):
         for s in self.species:
             k = max(1, int(round(len(s.members) * self.survival_rate)))
             pool = s.members[:k]
@@ -69,22 +185,11 @@ class GeneticAlgorithm:
                 child = self.crossover(g1, g2, self.next_genome_id)
                 child.mutation()
                 s.add_member(child)
-
         self.genomes[:] = []
         for s in self.species:
             self.genomes.extend(s.members)
             s.members[:] = []
             s.age += 1
-
-        # create basic population / initial birth
-        # create new phenotypes and evaluate network
-        # sort genomes by fitness
-        # update best
-        # assign genomes to species
-        # remove empty species
-        # adjust compatibility_threshold
-        # sort members by fitness, adjust fitness, average_fitness and max_fitness
-        # visualize
 
     @staticmethod
     def tournament_selection(genomes, number_to_compare):
@@ -238,3 +343,31 @@ class GeneticAlgorithm:
         n_match += 1
         score = (c1 * n_excess + c2 * n_disjoint) / max(n_genome1, n_genome2) + c3 * weight_difference / n_match
         return score
+
+    def __str__(self):
+        best = self.best
+        species_ids = ' '.join(s.species_id for s in self.species)
+        species_members_length = [len(s.members) for s in self.species]
+        species_age = ' '.join(s.age for s in self.species)
+        species_not_improved = ' '.join(s.generations_not_improved for s in self.species)
+        species_max_fitness = ' '.join(s.max_fitness for s in self.species)
+        species_avg_fitness = ' '.join(s.average_fitness for s in self.species)
+        species_leader = ' '.join(s.leader for s in self.species)
+        species_solved = ' '.join(s.leader.solved for s in self.species)
+        now = time.time()
+        string = f'\nGeneration: {self.generation}' \
+                 f'\nBest ID: {best.genome_id}, Fitness: {best.fitness}, Nodes: {len(best.nodes)},' \
+                 f' Connections: {len(best.connections)}, Depth: {best.phenotype.depth}' \
+                 f'\nSpecies ID: {species_ids}' \
+                 f'\nMembers length: {species_members_length}' \
+                 f'\nAge: {species_age}' \
+                 f'\nNot improved: {species_not_improved}' \
+                 f'\nMax fitness: {species_max_fitness}' \
+                 f'\nAverage fitness: {species_avg_fitness}' \
+                 f'\nLeaders: {species_leader}' \
+                 f'\nSolved: {species_solved}' \
+                 f'\nPopulation length: {len(self.genomes)}, Species length: {len(self.species)}, ' \
+                 f'Compatibility threshold: {self.compatibility_threshold}' \
+                 f'\nTotal time: {now-self.init_time}, Time per generation: {now-self.last_time}\n'
+        self.last_time = now
+        return string
