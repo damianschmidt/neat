@@ -4,12 +4,12 @@ from NEAT_new.src.connection import ConnectionGene
 from NEAT_new.src.innovation import InnovationType
 from NEAT_new.src.node import NodeGene
 from NEAT_new.src.node_type import NodeType
-from NEAT_new.src.phenotype import Network
+from NEAT_new.src.network import Network
 
 
 class Genome:
     def __init__(self, genome_id, innovation_set, nodes=None, connections=None, inputs_num=2, outputs_num=1,
-                 phenotype=None):
+                 network=None):
         self.genome_id = genome_id
         self.innovation_set = innovation_set
         self.nodes = nodes
@@ -19,7 +19,7 @@ class Genome:
         self.fitness = 0.0
         self.species_id = None
         self.adjusted_fitness = 0.0
-        self.phenotype = None
+        self.network = None
 
         # parameters
         self.tries_to_find_unconnected_nodes = 5
@@ -35,14 +35,14 @@ class Genome:
         if nodes is not None:
             self.nodes.sort(key=lambda x: x.node_id)
 
-        # create genome from phenotype
-        if phenotype is not None:
+        # create genome from network
+        if network is not None:
             inputs_num = 0
             outputs_num = 0
             next_node_id = 0
 
             self.nodes = []
-            for node in phenotype.nodes:
+            for node in network.nodes:
                 new_node = NodeGene(node.node_id, node.node_type)
                 if new_node.node_type == NodeType.INPUT:
                     inputs_num += 1
@@ -54,7 +54,7 @@ class Genome:
             innovation_set.next_node_id = max(innovation_set.next_node_id, next_node_id)
 
             self.connections = []
-            for connection in phenotype.connections:
+            for connection in network.connections:
                 in_node = connection.in_node.node_id
                 out_node = connection.out_node.node_id
                 innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=in_node,
@@ -203,9 +203,9 @@ class Genome:
             if random() > self.activation_mutation_rate:
                 node.activation_response += (random() * 2 - 1) * self.max_activation_perturbation
 
-    def create_phenotype(self):
-        self.phenotype = Network(self)
-        return self.phenotype
+    def create_network(self):
+        self.network = Network(self)
+        return self.network
 
     def __str__(self):
         string = f'Genome {self.genome_id} {self.fitness} \n' \

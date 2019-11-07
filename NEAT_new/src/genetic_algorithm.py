@@ -62,8 +62,8 @@ class GeneticAlgorithm:
         self.reproduction()
         # create basic population / initial birth
         self.create_basic_population()
-        # create new phenotypes and evaluate network
-        self.create_phenotype_and_evaluate()
+        # create new networks and evaluate network
+        self.create_network_and_evaluate()
         # sort genomes reverse by fitness
         self.sort_genomes_reverse_by_fitness()
         # update best
@@ -83,7 +83,7 @@ class GeneticAlgorithm:
 
         # TODO: visualize
 
-    def create_phenotype_and_evaluate(self):
+    def create_network_and_evaluate(self):
         for g in self.genomes:
             network = g.create_pheontype()
             fitness, solved = self.task.evaluate(network)
@@ -360,7 +360,7 @@ class GeneticAlgorithm:
         now = time.time()
         string = f'\nGeneration: {self.generation}' \
                  f'\nBest ID: {best.genome_id}, Fitness: {best.fitness}, Nodes: {len(best.nodes)},' \
-                 f' Connections: {len(best.connections)}, Depth: {best.phenotype.depth}' \
+                 f' Connections: {len(best.connections)}, Depth: {best.network.depth}' \
                  f'\nSpecies ID: {species_ids}' \
                  f'\nMembers length: {species_members_length}' \
                  f'\nAge: {species_age}' \

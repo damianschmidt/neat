@@ -11,7 +11,7 @@ class ConnectionGene:
         self.innovation_num = innovation_num
 
 
-class ConnectionPheno:
+class ConnectionNet:
     def __init__(self, nodes, connection_gene):
         self.input_node = next(filter(lambda n: n.node_id == connection_gene.in_node, nodes))
         self.output_node = next(filter(lambda n: n.node_id == connection_gene.out_node, nodes))
