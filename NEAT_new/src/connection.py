@@ -9,3 +9,12 @@ class ConnectionGene:
         self.disabled = disabled
         self.recurrent = recurrent
         self.innovation_num = innovation_num
+
+
+class ConnectionPheno:
+    def __init__(self, nodes, connection_gene):
+        self.input_node = next(filter(lambda n: n.node_id == connection_gene.in_node, nodes))
+        self.output_node = next(filter(lambda n: n.node_id == connection_gene.out_node, nodes))
+        self.input_node.output_conncetions.append(self)
+        self.output_node.input_connections.append(self)
+        self.weight = connection_gene.weight

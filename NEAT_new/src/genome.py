@@ -1,13 +1,15 @@
-from random import randint, random
+from random import randint, random, choice
 
 from NEAT_new.src.connection import ConnectionGene
 from NEAT_new.src.innovation import InnovationType
 from NEAT_new.src.node import NodeGene
 from NEAT_new.src.node_type import NodeType
+from NEAT_new.src.phenotype import Network
 
 
 class Genome:
-    def __init__(self, genome_id, innovation_set, nodes=None, connections=None, inputs_num=2, outputs_num=1):
+    def __init__(self, genome_id, innovation_set, nodes=None, connections=None, inputs_num=2, outputs_num=1,
+                 phenotype=None):
         self.genome_id = genome_id
         self.innovation_set = innovation_set
         self.nodes = nodes
@@ -17,10 +19,10 @@ class Genome:
         self.fitness = 0.0
         self.species_id = None
         self.adjusted_fitness = 0.0
+        self.phenotype = None
 
         # parameters
         self.tries_to_find_unconnected_nodes = 5
-
         self.weight_mutation_rate = 0.8
         self.reset_weight_rate = 0.1
         self.max_weight_perturbation = 0.5
@@ -28,12 +30,75 @@ class Genome:
         self.add_node_rate = 0.03
         self.activation_mutation_rate = 0.1
         self.max_activation_perturbation = 0.1
+        self.feature_selection_neat = True
 
         if nodes is not None:
             self.nodes.sort(key=lambda x: x.node_id)
 
         # create genome from phenotype
+        if phenotype is not None:
+            inputs_num = 0
+            outputs_num = 0
+            next_node_id = 0
+
+            self.nodes = []
+            for node in phenotype.nodes:
+                new_node = NodeGene(node.node_id, node.node_type)
+                if new_node.node_type == NodeType.INPUT:
+                    inputs_num += 1
+                elif new_node.node_type == NodeType.OUTPUT:
+                    outputs_num += 1
+                self.nodes.append(new_node)
+                next_node_id = max(next_node_id, node.node_id)
+            next_node_id += 1
+            innovation_set.next_node_id = max(innovation_set.next_node_id, next_node_id)
+
+            self.connections = []
+            for connection in phenotype.connections:
+                in_node = connection.in_node.node_id
+                out_node = connection.out_node.node_id
+                innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=in_node,
+                                                           out_node=out_node)
+                connection = ConnectionGene(in_node, out_node, innovation.innovation_num, weight=connection.weight)
+                self.connections.append(connection)
+            return
+
         # crate genome based on number of inputs and outputs
+        next_node_id = 0
+        self.nodes = []
+        # add bias gene
+        self.nodes.append(NodeGene(next_node_id, NodeType.BIAS))
+        next_node_id += 1
+        # add input nodes
+        for i in range(inputs_num):
+            self.nodes.append(NodeGene(next_node_id, NodeType.INPUT))
+            next_node_id += 1
+        # add output nodes
+        for i in range(outputs_num):
+            self.nodes.append(NodeGene(next_node_id, NodeType.OUTPUT))
+            next_node_id += 1
+        innovation_set.next_node_id = max(innovation_set.next_node_id, next_node_id)
+
+        # add connections
+        self.connections = []
+        if self.feature_selection_neat:
+            # connect random one input to one output
+            random_input = choice(self.get_input_nodes())
+            random_output = choice(self.get_output_nodes())
+            innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=random_input.node_id,
+                                                       out_node=random_output.node_id)
+            weight = random() * 2 - 1
+            self.connections.append(
+                ConnectionGene(random_input.node_id, random_output.node_id, innovation.innovation_num, weight=weight))
+        else:
+            # fully connected genome
+            for i in self.get_bias_input_nodes():
+                for o in self.get_output_nodes():
+                    innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=i.node_id,
+                                                               out_node=o.node_id)
+                    weight = random() * 2 - 1
+                    self.connections.append(
+                        ConnectionGene(i.node_id, o.node_id, innovation.innovation_num, weight=weight))
 
     def get_input_nodes(self):
         return [x for x in self.nodes if x.node_type == NodeType.INPUT]
@@ -47,8 +112,12 @@ class Genome:
     def get_hidden_nodes(self):
         return [x for x in self.nodes if x.node_type == NodeType.HIDDEN]
 
+    def get_bias_input_nodes(self):
+        return [x for x in self.nodes if x.node_type == NodeType.INPUT or x.node_type == NodeType.BIAS]
+
     def get_bias_input_output_nodes(self):
-        return [x for x in self.nodes if x.type == NodeType.INPUT or x.type == NodeType.BIAS or x.type == NodeType.OUTPUT]
+        return [x for x in self.nodes if
+                x.node_type == NodeType.INPUT or x.node_type == NodeType.BIAS or x.node_type == NodeType.OUTPUT]
 
     def exist_node(self, node_id):
         for node in self.nodes:
@@ -133,6 +202,10 @@ class Genome:
         for node in self.nodes:
             if random() > self.activation_mutation_rate:
                 node.activation_response += (random() * 2 - 1) * self.max_activation_perturbation
+
+    def create_phenotype(self):
+        self.phenotype = Network(self)
+        return self.phenotype
 
     def __str__(self):
         string = f'Genome {self.genome_id} {self.fitness} \n' \
