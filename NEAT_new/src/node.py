@@ -1,5 +1,5 @@
 class NodeGene:
-    def __init__(self, node_id, node_type, activation_response=None):
+    def __init__(self, node_id, node_type):
         self.node_id = node_id
         self.node_type = node_type
 

@@ -136,7 +136,7 @@ class Genome:
         while connection is None:
             temp_connection = self.connections[randint(0, len(self.connections) - 1)]
             if not temp_connection.disabled and not temp_connection.recurrent and self.exist_node(
-                    temp_connection.in_node).type != NodeType.BIAS:
+                    temp_connection.in_node).node_type != NodeType.BIAS:
                 connection = temp_connection
 
         in_node = self.exist_node(connection.in_node)
@@ -198,10 +198,10 @@ class Genome:
                 else:
                     con.weight += (random() * 2 - 1) * self.max_weight_perturbation
 
-        # mutate activation response
-        for node in self.nodes:
-            if random() > self.activation_mutation_rate:
-                node.activation_response += (random() * 2 - 1) * self.max_activation_perturbation
+        # TODO: mutate activation response
+        # for node in self.nodes:
+        #     if random() > self.activation_mutation_rate:
+        #         node.activation_response += (random() * 2 - 1) * self.max_activation_perturbation
 
     def create_network(self):
         self.network = Network(self)

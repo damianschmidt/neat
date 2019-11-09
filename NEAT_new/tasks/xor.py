@@ -1,4 +1,8 @@
+import time
+
 import numpy as np
+
+from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 
 
 class XorTask:
@@ -31,3 +35,18 @@ class XorTask:
 
 if __name__ == '__main__':
     task = XorTask()
+
+    # only benchmarks
+    generations = np.array([])
+    start_time = time.time()
+    for i in range(50):  # 50 tries of solving problem
+        algorithm = GeneticAlgorithm(task)
+        for j in range(500):  # 500 epochs
+            if algorithm.evaluator():  # if solved
+                generations = np.append(generations, algorithm.generation)
+                duration = time.time() - start_time
+                print(f'Average generations: {generations.mean()}\n'
+                      f'Std: {generations.std()}\n'
+                      f'Size: {generations.size()}\n'
+                      f'Time: {duration}')
+                break

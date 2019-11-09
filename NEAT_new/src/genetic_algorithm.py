@@ -38,10 +38,10 @@ class GeneticAlgorithm:
         if not hasattr(self.task, 'name'):
             self.task.name = type(self.task).__name__
 
-        self.results_path = f'./results/{self.task.name}'
+        self.results_path = f'./NEAT_new/results/{self.task.name}'
         if os.path.exists(self.results_path):
             shutil.rmtree(self.results_path)
-        os.mkdir(self.results_path)
+        os.makedirs(self.results_path)
 
         self.statistics = {
             'species': [],
@@ -83,9 +83,12 @@ class GeneticAlgorithm:
 
         # TODO: visualize
 
+        self.generation += 1
+        return self.best.solved
+
     def create_network_and_evaluate(self):
         for g in self.genomes:
-            network = g.create_pheontype()
+            network = g.create_network()
             fitness, solved = self.task.evaluate(network)
             g.fitness = fitness
             g.solved = int(solved)
@@ -197,7 +200,7 @@ class GeneticAlgorithm:
     @staticmethod
     def tournament_selection(genomes, number_to_compare):
         champion = None
-        for _ in range(number_to_compare):
+        for _ in range(int(number_to_compare)):
             g = genomes[randint(0, len(genomes) - 1)]
             if champion is None or g.fitness > champion.fitness:
                 champion = g
@@ -349,18 +352,18 @@ class GeneticAlgorithm:
 
     def __str__(self):
         best = self.best
-        species_ids = ' '.join(s.species_id for s in self.species)
+        species_ids = ' '.join(str(s.species_id) for s in self.species)
         species_members_length = [len(s.members) for s in self.species]
-        species_age = ' '.join(s.age for s in self.species)
-        species_not_improved = ' '.join(s.generations_not_improved for s in self.species)
-        species_max_fitness = ' '.join(s.max_fitness for s in self.species)
-        species_avg_fitness = ' '.join(s.average_fitness for s in self.species)
-        species_leader = ' '.join(s.leader for s in self.species)
-        species_solved = ' '.join(s.leader.solved for s in self.species)
+        species_age = ' '.join(str(s.age) for s in self.species)
+        species_not_improved = ' '.join(str(s.generations_not_improved) for s in self.species)
+        species_max_fitness = ' '.join(str(s.max_fitness) for s in self.species)
+        species_avg_fitness = ' '.join(str(s.average_fitness) for s in self.species)
+        species_leader = ' '.join(str(s.leader) for s in self.species)
+        species_solved = ' '.join(str(s.leader.solved) for s in self.species)
         now = time.time()
         string = f'\nGeneration: {self.generation}' \
                  f'\nBest ID: {best.genome_id}, Fitness: {best.fitness}, Nodes: {len(best.nodes)},' \
-                 f' Connections: {len(best.connections)}, Depth: {best.network.depth}' \
+                 f' Connections: {len(best.connections)}, Depth: TODO' \
                  f'\nSpecies ID: {species_ids}' \
                  f'\nMembers length: {species_members_length}' \
                  f'\nAge: {species_age}' \

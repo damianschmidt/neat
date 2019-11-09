@@ -33,7 +33,7 @@ class Network:
                 sum_w = 0.0
                 for connection in node.input_connections:
                     sum_w += connection.weight * connection.input_node.value
-                value = self.sigmoid(sum)
+                value = self.sigmoid(sum_w)
                 node.value = value
                 if node.node_type == NodeType.OUTPUT:
                     outputs.append(value)
