@@ -11,4 +11,4 @@ class NodeNet:
         self.input_connections = []
         self.output_connections = []
         self.sum_activation = 0.0
-        self.node_output = 0.0
+        self.value = 0.0

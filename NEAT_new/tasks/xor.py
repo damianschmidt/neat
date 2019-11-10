@@ -42,11 +42,12 @@ if __name__ == '__main__':
     for i in range(50):  # 50 tries of solving problem
         algorithm = GeneticAlgorithm(task)
         for j in range(500):  # 500 epochs
+            print('Try:', i, 'Epoch:', j)
             if algorithm.evaluator():  # if solved
                 generations = np.append(generations, algorithm.generation)
                 duration = time.time() - start_time
-                print(f'Average generations: {generations.mean()}\n'
-                      f'Std: {generations.std()}\n'
-                      f'Size: {generations.size()}\n'
-                      f'Time: {duration}')
+                # print(f'Average generations: {generations.mean()}\n'
+                #       f'Std: {generations.std()}\n'
+                #       f'Size: {generations.size()}\n'
+                #       f'Time: {duration}')
                 break

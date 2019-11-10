@@ -79,7 +79,7 @@ class GeneticAlgorithm:
         # update statistics
         self.update_statistics()
         # print representation
-        print(self)
+        # print(self)
 
         # TODO: visualize
 

@@ -149,11 +149,11 @@ class Genome:
             self.nodes.append(node)
 
             innovation1 = self.innovation_set.get_innovation(InnovationType.CONNECTION, in_node, node.node_id)
-            con1 = ConnectionGene(in_node, node.node_id, innovation1.innovation_num, weight=1.0)
+            con1 = ConnectionGene(in_node.node_id, node.node_id, innovation1.innovation_num, weight=1.0)
             self.connections.append(con1)
 
             innovation2 = self.innovation_set.get_innovation(InnovationType.CONNECTION, node.node_id, out_node)
-            con2 = ConnectionGene(node.node_id, out_node, innovation2.innovation_num, weight=connection.weight)
+            con2 = ConnectionGene(node.node_id, out_node.node_id, innovation2.innovation_num, weight=connection.weight)
             self.connections.append(con2)
 
             connection.disabled = True
