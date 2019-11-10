@@ -30,7 +30,7 @@ class XorTask:
         rmse = np.sqrt(mse / len(self.input_data))
         fitness_score = 1 / (1 + rmse)
         solved = fitness_score > 0.99
-        return [fitness_score, solved]
+        return fitness_score, solved
 
 
 if __name__ == '__main__':
@@ -39,15 +39,15 @@ if __name__ == '__main__':
     # only benchmarks
     generations = np.array([])
     start_time = time.time()
-    for i in range(50):  # 50 tries of solving problem
+    for i in range(1):  # 50 tries of solving problem
         algorithm = GeneticAlgorithm(task)
+        print('Try:', i)
         for j in range(500):  # 500 epochs
-            print('Try:', i, 'Epoch:', j)
             if algorithm.evaluator():  # if solved
                 generations = np.append(generations, algorithm.generation)
                 duration = time.time() - start_time
-                # print(f'Average generations: {generations.mean()}\n'
-                #       f'Std: {generations.std()}\n'
-                #       f'Size: {generations.size()}\n'
-                #       f'Time: {duration}')
+                print(f'Average generations: {generations.mean()}\n'
+                      f'Std: {generations.std()}\n'
+                      f'Size: {generations.size()}\n'
+                      f'Time: {duration}')
                 break

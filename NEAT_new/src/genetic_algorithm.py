@@ -27,18 +27,21 @@ class GeneticAlgorithm:
         self.last_time = time.time()
 
         # parameters
-        self.population_size = 100
+        self.population_size = 120
         self.number_generation_allowed_to_not_improve = 20
         self.crossover_rate = 0.7
-        self.survival_rate = 0.3
+        self.survival_rate = 0.5
         self.compatibility_threshold = 3.0
         self.target_species = 30
+
+        self.elitism = True
+        self.min_elitism_size = 1
 
     def initialize(self):
         if not hasattr(self.task, 'name'):
             self.task.name = type(self.task).__name__
 
-        self.results_path = f'./NEAT_new/results/{self.task.name}'
+        self.results_path = f'./results/{self.task.name}'
         if os.path.exists(self.results_path):
             shutil.rmtree(self.results_path)
         os.makedirs(self.results_path)
@@ -52,9 +55,9 @@ class GeneticAlgorithm:
         if not hasattr(self, 'statistics'):
             self.initialize()
 
-        total_average = sum(s.average_fitness for s in self.species)
+        total_average = sum(s.avg_fitness for s in self.species)
         for s in self.species:
-            s.spawns_required = int(round(self.population_size * s.average_fitness / total_average))
+            s.spawns_required = int(round(self.population_size * s.avg_fitness / total_average))
 
         # remove stagnated species and species with no offsprings
         self.clear_species()
@@ -79,7 +82,7 @@ class GeneticAlgorithm:
         # update statistics
         self.update_statistics()
         # print representation
-        # print(self)
+        print(self)
 
         # TODO: visualize
 
@@ -122,7 +125,7 @@ class GeneticAlgorithm:
             elif s.age > 50:
                 fitness *= 0.7
             member.adjusted_fitness = fitness / len(s.members)
-        s.average_fitness = sum_fitness / len(s.members)
+        s.avg_fitness = sum_fitness / len(s.members)
 
     def update_statistics(self):
         for s in self.species:
@@ -174,7 +177,7 @@ class GeneticAlgorithm:
     def clear_species(self):
         species = []
         for s in self.species:
-            if s.generations_not_improved < self.number_generation_allowed_to_not_improve and s.spawns_required > 0:
+            if s.gen_not_improved < self.number_generation_allowed_to_not_improve and s.spawns_required > 0:
                 species.append(s)
         self.species[:] = species
 
@@ -184,11 +187,15 @@ class GeneticAlgorithm:
             pool = s.members[:k]
             s.members[:] = []
 
+            if self.elitism and len(pool) > self.min_elitism_size:
+                s.add_member(s.leader)
+
             while len(s.members) < s.spawns_required:
                 n = self.population_size / 5
                 g1 = self.tournament_selection(pool, n)
                 g2 = self.tournament_selection(pool, n)
                 child = self.crossover(g1, g2, self.next_genome_id)
+                self.next_genome_id += 1
                 child.mutation()
                 s.add_member(child)
         self.genomes[:] = []
@@ -351,29 +358,23 @@ class GeneticAlgorithm:
         return score
 
     def __str__(self):
-        best = self.best
-        species_ids = ' '.join(str(s.species_id) for s in self.species)
-        species_members_length = [len(s.members) for s in self.species]
-        species_age = ' '.join(str(s.age) for s in self.species)
-        species_not_improved = ' '.join(str(s.generations_not_improved) for s in self.species)
-        species_max_fitness = ' '.join(str(s.max_fitness) for s in self.species)
-        species_avg_fitness = ' '.join(str(s.average_fitness) for s in self.species)
-        species_leader = ' '.join(str(s.leader) for s in self.species)
-        species_solved = ' '.join(str(s.leader.solved) for s in self.species)
+        b = self.best
+        s = '\nGeneration %s' % self.generation
+        s += '\nBest ID: %s Fitness: %0.5f Nodes: %s Connections: %s Depth: %s' % (
+            b.genome_id, b.fitness, len(b.nodes), len(b.connections), b.network.depth)
+        s += '\nSpecies ID:  ' + ' '.join('%4d' % s.species_id for s in self.species)
+        s += '\nSpawns req:  ' + ' '.join('%4d' % s.spawns_required for s in self.species)
+        s += '\nMembers len: ' + ' '.join('%4d' % (len(s.members)) for s in self.species)
+        s += '\nAge:         ' + ' '.join('%4d' % s.age for s in self.species)
+        s += '\nNot improved:' + ' '.join('%4d' % s.generations_not_improved for s in self.species)
+        s += '\nMax fitness: ' + ' '.join('%0.2f' % s.max_fitness for s in self.species)
+        s += '\nAvg fitness: ' + ' '.join('%0.2f' % s.avg_fitness for s in self.species)
+        s += '\nLeader:      ' + ' '.join('%4d' % s.leader.genome_id for s in self.species)
+        s += '\nSolved:      ' + ' '.join('%4d' % s.leader.solved for s in self.species)
+        s += '\nPopulation_len: %s  Species_len: %s  Compatibility_threshold: %0.2f' % (
+            len(self.genomes), len(self.species), self.compatibility_threshold)
         now = time.time()
-        string = f'\nGeneration: {self.generation}' \
-                 f'\nBest ID: {best.genome_id}, Fitness: {best.fitness}, Nodes: {len(best.nodes)},' \
-                 f' Connections: {len(best.connections)}, Depth: TODO' \
-                 f'\nSpecies ID: {species_ids}' \
-                 f'\nMembers length: {species_members_length}' \
-                 f'\nAge: {species_age}' \
-                 f'\nNot improved: {species_not_improved}' \
-                 f'\nMax fitness: {species_max_fitness}' \
-                 f'\nAverage fitness: {species_avg_fitness}' \
-                 f'\nLeaders: {species_leader}' \
-                 f'\nSolved: {species_solved}' \
-                 f'\nPopulation length: {len(self.genomes)}, Species length: {len(self.species)}, ' \
-                 f'Compatibility threshold: {self.compatibility_threshold}' \
-                 f'\nTotal time: {now-self.init_time}, Time per generation: {now-self.last_time}\n'
+        s += '\nTime total: %0.3f  Time per epoch: %0.3f' % (now - self.init_time, now - self.last_time)
         self.last_time = now
-        return string
+        s += '\n'
+        return s
