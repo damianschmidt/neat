@@ -1,9 +1,9 @@
 from graphics import *
 from random import randint
 
-from NEAT_conventional.src.genome import Genome
-from NEAT_conventional.src.node_gene import NodeGene
-from NEAT_conventional.src.connection_gene import ConnectionGene
+from NEAT_legacy.src.genome import Genome
+from NEAT_legacy.src.node_gene import NodeGene
+from NEAT_legacy.src.connection_gene import ConnectionGene
 
 
 class GenomePrinter:

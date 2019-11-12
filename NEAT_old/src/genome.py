@@ -1,14 +1,13 @@
-import time
 from math import sqrt
 from random import randint, random, choice
 
 import numpy as np
 
-from NEAT_new.src.connection import ConnectionGene
-from NEAT_new.src.innovation import InnovationType
-from NEAT_new.src.node import NodeGene
-from NEAT_new.src.node import NodeType
-from NEAT_new.src.network import Network
+from NEAT_old.src.connection import ConnectionGene
+from NEAT_old.src.innovation import InnovationType
+from NEAT_old.src.network import Network
+from NEAT_old.src.node import NodeGene
+from NEAT_old.src.node import NodeType
 
 
 class Genome:
@@ -102,7 +101,8 @@ class Genome:
                 random_output = choice(self.get_output_nodes())
                 innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=random_input.node_id,
                                                            out_node=random_output.node_id)
-                weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
+                # weight = np.random.normal(0, self.stdev_weight)
+                weight = random() * 2 - 1
                 self.connections.append(
                     ConnectionGene(random_input.node_id, random_output.node_id, innovation.innovation_num,
                                    weight=weight))
@@ -112,7 +112,8 @@ class Genome:
                     for o in self.get_output_nodes():
                         innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=i.node_id,
                                                                    out_node=o.node_id)
-                        weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
+                        # weight = np.random.normal(0, self.stdev_weight)
+                        weight = random() * 2 - 1
                         self.connections.append(
                             ConnectionGene(i.node_id, o.node_id, innovation.innovation_num, weight=weight))
 
@@ -148,6 +149,7 @@ class Genome:
         return None
 
     def add_node(self):
+        # print('t')
         connection = None
         # if genome is less then 5 hidden neurons, it is considered to be to small to select a link at random
         size_threshold = self.inputs_num + self.outputs_num + 5
@@ -221,7 +223,8 @@ class Genome:
             # print('test')
             return None
         innovation = self.innovation_set.get_innovation(InnovationType.CONNECTION, node1.node_id, node2.node_id)
-        weight = np.random.normal(0, self.stdev_weight)
+        # weight = np.random.normal(0, self.stdev_weight)
+        weight = random() * 2 - 1
         connection = ConnectionGene(node1.node_id, node2.node_id, innovation.innovation_num, weight=weight,
                                     recurrent=recurrent)
         self.connections.append(connection)
@@ -245,9 +248,9 @@ class Genome:
                 if random() < self.reset_weight_rate:
                     con.weight = np.random.normal(0, self.stdev_weight)
                 else:
-                    # con.weight += (random() * 2 - 1) * self.max_weight_perturbation
-                    con.weight += np.random.normal(0, self.stdev_mutate_weight)
-                    con.weight = np.clip(con.weight, -10., 10.)
+                    con.weight += (random() * 2 - 1) * self.max_weight_perturbation
+                    # con.weight += np.random.normal(0, self.stdev_mutate_weight)
+                    # con.weight = np.clip(con.weight, -10., 10.)
 
         for node in self.nodes:
             if random() > self.activation_mutation_rate:

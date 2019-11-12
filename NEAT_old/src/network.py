@@ -1,8 +1,8 @@
 import numpy as np
 
-from NEAT_new.src.connection import ConnectionNet
-from NEAT_new.src.node import NodeNet
-from NEAT_new.src.node import NodeType
+from NEAT_old.src.connection import ConnectionNet
+from NEAT_old.src.node import NodeNet
+from NEAT_old.src.node import NodeType
 
 
 class Network:
@@ -37,7 +37,7 @@ class Network:
                 sum_w = 0.0
                 for connection in node.input_connections:
                     sum_w += connection.weight * connection.input_node.value
-                value = self.sigmoid(sum_w, node.activation_response)
+                value = self.sigmoid_neat(sum_w)
                 node.value = value
                 if node.node_type == NodeType.OUTPUT:
                     outputs.append(value)

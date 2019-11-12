@@ -4,9 +4,9 @@ import time
 from copy import deepcopy
 from random import randint, choice, getrandbits
 
-from NEAT_new.src.genome import Genome
-from NEAT_new.src.innovation import InnovationSet
-from NEAT_new.src.species import Species
+from NEAT_old.src.genome import Genome
+from NEAT_old.src.innovation import InnovationSet
+from NEAT_old.src.species import Species
 
 
 class GeneticAlgorithm:

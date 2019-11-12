@@ -1,6 +1,6 @@
 import unittest
-from NEAT_conventional.src.neural_network import NeuralNetwork, Neuron
-from NEAT_conventional.src.genome import Genome
+from NEAT_legacy.src.neural_network import NeuralNetwork, Neuron
+from NEAT_legacy.src.genome import Genome
 
 
 class NeuralNetworkTestCase(unittest.TestCase):

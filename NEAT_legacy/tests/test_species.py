@@ -1,8 +1,8 @@
 import unittest
 
-from NEAT_conventional.src.fitness_genome import FitnessGenome
-from NEAT_conventional.src.genome import Genome
-from NEAT_conventional.src.species import Species
+from NEAT_legacy.src.fitness_genome import FitnessGenome
+from NEAT_legacy.src.genome import Genome
+from NEAT_legacy.src.species import Species
 
 
 class SpeciesTestCase(unittest.TestCase):

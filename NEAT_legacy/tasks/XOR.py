@@ -1,10 +1,10 @@
-from NEAT_conventional.src.connection_gene import ConnectionGene
-from NEAT_conventional.src.evaluator import Evaluator
-from NEAT_conventional.src.genome import Genome
-from NEAT_conventional.src.innovation_generator import InnovationGenerator
-from NEAT_conventional.src.neural_network import NeuralNetwork
-from NEAT_conventional.src.node_gene import NodeGene
-from NEAT_conventional.tests.genome_printer import GenomePrinter
+from NEAT_legacy.src.connection_gene import ConnectionGene
+from NEAT_legacy.src.evaluator import Evaluator
+from NEAT_legacy.src.genome import Genome
+from NEAT_legacy.src.innovation_generator import InnovationGenerator
+from NEAT_legacy.src.neural_network import NeuralNetwork
+from NEAT_legacy.src.node_gene import NodeGene
+from NEAT_legacy.tests.genome_printer import GenomePrinter
 
 
 class XOR(Evaluator):

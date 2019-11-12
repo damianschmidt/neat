@@ -1,9 +1,9 @@
 import random
 
-from NEAT_conventional.src.connection_gene import ConnectionGene
-from NEAT_conventional.src.node_gene import NodeGene
-from NEAT_conventional.src.innovation_generator import InnovationGenerator
-from NEAT_conventional.src.neat_conf import Config
+from NEAT_legacy.src.connection_gene import ConnectionGene
+from NEAT_legacy.src.node_gene import NodeGene
+from NEAT_legacy.src.innovation_generator import InnovationGenerator
+from NEAT_legacy.src.neat_conf import Config
 
 
 class Genome:

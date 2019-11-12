@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 
-from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
+from NEAT_old.src.genetic_algorithm import GeneticAlgorithm
 
 
 class XorTask:

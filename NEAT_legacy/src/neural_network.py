@@ -1,4 +1,4 @@
-from NEAT_conventional.src.neuron import Neuron
+from NEAT_legacy.src.neuron import Neuron
 
 
 class NeuralNetwork:
