@@ -23,6 +23,9 @@ class XorTask:
         mse = 0.0
         for (input_datum, target) in zip(self.input_data, self.output_data):
             output = network.feed(input_datum)
+            # print(input_datum, output, target)
+            # import time
+            # time.sleep(3)
             error = target - output
             error[abs(error) < 1e-100] = 0
             mse += (error ** 2).mean()
@@ -43,7 +46,7 @@ if __name__ == '__main__':
         algorithm = GeneticAlgorithm(task)
         print('Try:', i)
         for j in range(500):  # 500 epochs
-            print('Epoch', j)
+            # print('Epoch', j)
             if algorithm.evaluator():  # if solved
                 generations = np.append(generations, algorithm.generation)
                 duration = time.time() - start_time

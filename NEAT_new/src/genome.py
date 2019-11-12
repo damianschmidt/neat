@@ -104,7 +104,8 @@ class Genome:
                                                            out_node=random_output.node_id)
                 weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
                 self.connections.append(
-                    ConnectionGene(random_input.node_id, random_output.node_id, innovation.innovation_num, weight=weight))
+                    ConnectionGene(random_input.node_id, random_output.node_id, innovation.innovation_num,
+                                   weight=weight))
             else:
                 # fully connected genome
                 for i in self.get_bias_input_nodes():
@@ -188,8 +189,9 @@ class Genome:
             con2 = ConnectionGene(node.node_id, out_node.node_id, innovation2.innovation_num, weight=connection.weight,
                                   recurrent=recurrent)
             self.connections.append(con2)
-
             connection.disabled = True
+
+            # why I return sth?
             return node, con1, con2
         else:
             return None
@@ -216,13 +218,14 @@ class Genome:
                         break
 
         if node1 is None or node2 is None:
+            # print('test')
             return None
-
         innovation = self.innovation_set.get_innovation(InnovationType.CONNECTION, node1.node_id, node2.node_id)
         weight = np.random.normal(0, self.stdev_weight)
         connection = ConnectionGene(node1.node_id, node2.node_id, innovation.innovation_num, weight=weight,
                                     recurrent=recurrent)
-        return connection
+        self.connections.append(connection)
+        return connection  # why I return sth?
 
     def mutation(self):
         # add node
@@ -231,10 +234,10 @@ class Genome:
 
         # add connection
         if random() < self.add_connection_rate:
-            print('pre', self.connections)
-            self.add_connection() # TODO: doesn't work!
-            print('after', self.connections)
-            time.sleep(5)
+            # print('pre', self.connections)
+            self.add_connection()
+            # print('after', self.connections)
+            # time.sleep(5)
 
         # mutate weights
         for con in self.connections:

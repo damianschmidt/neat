@@ -82,7 +82,7 @@ class GeneticAlgorithm:
         # update statistics
         self.update_statistics()
         # print representation
-        print(self.best.fitness)
+        print(self.best)
         # print(len(self.genomes))
         # for g in self.genomes:
         #     if len(g.get_hidden_nodes()) > 1 or len(g.connections) > 3:
