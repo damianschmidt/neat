@@ -6,4 +6,4 @@
 - [ ] NEAT_old
     - Algorithm evaluate genomes and works but can not solve xor problem.
 - [ ] NEAT_new
-    - three times lucky
+    - Three times lucky
