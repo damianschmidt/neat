@@ -12,6 +12,9 @@ class NodeGene:
         self.pos_x = pos_x
         self.pos_y = pos_y
 
+    def __repr__(self):
+        return f'(ID:{self.node_id}, Type:{self.node_type})'
+
 
 class NodeNet:
     def __init__(self, node_gene):

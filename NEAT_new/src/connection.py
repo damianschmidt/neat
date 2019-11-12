@@ -7,8 +7,11 @@ class ConnectionGene:
         self.out_node = out_node
         self.weight = random() * 2 - 1 if weight is None else weight
         self.disabled = disabled
-        self.recurrent = recurrent  # TODO: necessary?
+        self.recurrent = recurrent
         self.innovation_num = innovation_num
+
+    def __repr__(self):
+        return f'{self.weight} ({self.in_node}-{self.out_node})'
 
 
 class ConnectionNet:

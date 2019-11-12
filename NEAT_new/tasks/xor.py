@@ -43,6 +43,7 @@ if __name__ == '__main__':
         algorithm = GeneticAlgorithm(task)
         print('Try:', i)
         for j in range(500):  # 500 epochs
+            print('Epoch', j)
             if algorithm.evaluator():  # if solved
                 generations = np.append(generations, algorithm.generation)
                 duration = time.time() - start_time

@@ -1,3 +1,4 @@
+import time
 from math import sqrt
 from random import randint, random, choice
 
@@ -31,12 +32,12 @@ class Genome:
         self.weight_mutation_rate = 0.8
         self.reset_weight_rate = 0.1
         self.max_weight_perturbation = 0.5
-        self.add_connection_rate = 0.3  # 0.07
+        self.add_connection_rate = 0.07
         self.add_node_rate = 0.03
         self.activation_mutation_rate = 0.1
         self.max_activation_perturbation = 0.1
         self.feature_selection_neat = True
-        self.chance_to_add_recurrent_connection = 0.05  # What is recurrent connection?
+        self.chance_to_add_recurrent_connection = 0.05
 
         # weights
         self.stdev_weight = 2.0
@@ -74,43 +75,45 @@ class Genome:
             return
 
         # crate genome based on number of inputs and outputs
-        in_pos_x = 1. / (inputs_num + 1)
-        out_pos_x = 1. / outputs_num
-        next_node_id = 0
-        self.nodes = []
-        # add bias gene
-        self.nodes.append(NodeGene(next_node_id, NodeType.BIAS, 0.5 * in_pos_x, 0.0))
-        next_node_id += 1
-        # add input nodes
-        for i in range(inputs_num):
-            self.nodes.append(NodeGene(next_node_id, NodeType.INPUT, (i + 1 + 0.5) * in_pos_x, 0.0))
+        if self.nodes is None:
+            in_pos_x = 1. / (inputs_num + 1)
+            out_pos_x = 1. / outputs_num
+            next_node_id = 0
+            self.nodes = []
+            # add bias gene
+            self.nodes.append(NodeGene(next_node_id, NodeType.BIAS, 0.5 * in_pos_x, 0.0))
             next_node_id += 1
-        # add output nodes
-        for i in range(outputs_num):
-            self.nodes.append(NodeGene(next_node_id, NodeType.OUTPUT, (i + 0.5) * out_pos_x, 1.0))
-            next_node_id += 1
-        innovation_set.next_node_id = max(innovation_set.next_node_id, next_node_id)
+            # add input nodes
+            for i in range(inputs_num):
+                self.nodes.append(NodeGene(next_node_id, NodeType.INPUT, (i + 1 + 0.5) * in_pos_x, 0.0))
+                next_node_id += 1
+            # add output nodes
+            for i in range(outputs_num):
+                self.nodes.append(NodeGene(next_node_id, NodeType.OUTPUT, (i + 0.5) * out_pos_x, 1.0))
+                next_node_id += 1
+            innovation_set.next_node_id = max(innovation_set.next_node_id, next_node_id)
 
-        # add connections
-        self.connections = []
-        if self.feature_selection_neat:
-            # connect random one input to one output
-            random_input = choice(self.get_input_nodes())
-            random_output = choice(self.get_output_nodes())
-            innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=random_input.node_id,
-                                                       out_node=random_output.node_id)
-            weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
-            self.connections.append(
-                ConnectionGene(random_input.node_id, random_output.node_id, innovation.innovation_num, weight=weight))
-        else:
-            # fully connected genome
-            for i in self.get_bias_input_nodes():
-                for o in self.get_output_nodes():
-                    innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=i.node_id,
-                                                               out_node=o.node_id)
-                    weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
-                    self.connections.append(
-                        ConnectionGene(i.node_id, o.node_id, innovation.innovation_num, weight=weight))
+        if self.connections is None:
+            # add connections
+            self.connections = []
+            if self.feature_selection_neat:
+                # connect random one input to one output
+                random_input = choice(self.get_input_nodes())
+                random_output = choice(self.get_output_nodes())
+                innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=random_input.node_id,
+                                                           out_node=random_output.node_id)
+                weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
+                self.connections.append(
+                    ConnectionGene(random_input.node_id, random_output.node_id, innovation.innovation_num, weight=weight))
+            else:
+                # fully connected genome
+                for i in self.get_bias_input_nodes():
+                    for o in self.get_output_nodes():
+                        innovation = innovation_set.get_innovation(InnovationType.CONNECTION, in_node=i.node_id,
+                                                                   out_node=o.node_id)
+                        weight = np.random.normal(0, self.stdev_weight)  # random() * 2 - 1
+                        self.connections.append(
+                            ConnectionGene(i.node_id, o.node_id, innovation.innovation_num, weight=weight))
 
     def get_input_nodes(self):
         return [x for x in self.nodes if x.node_type == NodeType.INPUT]
@@ -228,7 +231,10 @@ class Genome:
 
         # add connection
         if random() < self.add_connection_rate:
-            self.add_connection()
+            print('pre', self.connections)
+            self.add_connection() # TODO: doesn't work!
+            print('after', self.connections)
+            time.sleep(5)
 
         # mutate weights
         for con in self.connections:
@@ -249,11 +255,13 @@ class Genome:
         return self.network
 
     def __str__(self):
-        string = f'Genome {self.genome_id} {self.fitness} \n' \
-                 f'Inputs {self.inputs_num} \n' \
-                 f'Outputs {self.outputs_num} \n' \
-                 f'Bias nodes {len(self.get_bias_nodes())} \n' \
-                 f'Input nodes {len(self.get_input_nodes())} \n' \
+        string = f'Genome       {self.genome_id} {self.fitness} \n' \
+                 f'Inputs       {self.inputs_num} \n' \
+                 f'Outputs      {self.outputs_num} \n' \
+                 f'Bias nodes   {len(self.get_bias_nodes())} \n' \
+                 f'Input nodes  {len(self.get_input_nodes())} \n' \
                  f'Hidden nodes {len(self.get_hidden_nodes())} \n' \
-                 f'Output nodes {len(self.get_output_nodes())} \n'
+                 f'Output nodes {len(self.get_output_nodes())} \n' \
+                 f'Connections  {self.connections} \n' \
+                 f'Nodes:       {self.nodes} \n'
         return string

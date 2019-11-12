@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 from copy import deepcopy
-from random import randint, choice
+from random import randint, choice, getrandbits
 
 from NEAT_new.src.genome import Genome
 from NEAT_new.src.innovation import InnovationSet
@@ -82,7 +82,11 @@ class GeneticAlgorithm:
         # update statistics
         self.update_statistics()
         # print representation
-        print(self)
+        print(self.best.fitness)
+        # print(len(self.genomes))
+        # for g in self.genomes:
+        #     if len(g.get_hidden_nodes()) > 1 or len(g.connections) > 3:
+        #         print(g)
 
         # TODO: visualize
 
@@ -194,7 +198,7 @@ class GeneticAlgorithm:
                 n = self.population_size / 5
                 g1 = self.tournament_selection(pool, n)
                 g2 = self.tournament_selection(pool, n)
-                child = self.crossover(g1, g2, self.next_genome_id)
+                child = self.crossover2(g1, g2, self.next_genome_id)
                 self.next_genome_id += 1
                 child.mutation()
                 s.add_member(child)
@@ -213,22 +217,37 @@ class GeneticAlgorithm:
                 champion = g
         return champion
 
-    @staticmethod
-    def crossover(genome1, genome2, child_id):
+    def crossover2(self, genome1, genome2, child_id):
         n_genome1 = len(genome1.connections)
         n_genome2 = len(genome2.connections)
 
-        if genome1.fitness == genome2.fitness:
-            if n_genome1 == n_genome2:
-                better_genome = (genome1, genome2)[randint(0, 1)]
-            elif n_genome1 < n_genome2:
-                better_genome = genome1
-            else:
-                better_genome = genome2
-        elif genome1.fitness > genome2.fitness:
-            better_genome = genome1
-        else:
-            better_genome = genome2
+        better_genome, worse_genome = self.get_more_fit_genome(genome1, genome2, n_genome1, n_genome2)
+        child_nodes = deepcopy(better_genome.nodes)
+        child_connections = []
+
+        for connection_better in better_genome.connections:
+            matching = False
+            for connection_worse in worse_genome.connections:
+                if connection_better.innovation_num == connection_worse.innovation_num:  # matching gene
+                    child_connection = connection_better if bool(getrandbits(1)) else connection_worse
+                    child_connections.append(child_connection)
+                    matching = True
+            if not matching:
+                child_connections.append(connection_better)
+
+        innovation_set = better_genome.innovation_set
+        inputs_num = better_genome.inputs_num
+        outputs_num = better_genome.outputs_num
+        child = Genome(child_id, innovation_set, nodes=child_nodes, connections=child_connections,
+                       inputs_num=inputs_num, outputs_num=outputs_num)
+
+        return child
+
+    def crossover(self, genome1, genome2, child_id):
+        n_genome1 = len(genome1.connections)
+        n_genome2 = len(genome2.connections)
+
+        better_genome, worse_genome = self.get_more_fit_genome(genome1, genome2, n_genome1, n_genome2)
 
         child_nodes = []
         child_connections = []
@@ -304,12 +323,28 @@ class GeneticAlgorithm:
         if all([con.disabled for con in child_connections]):
             choice(child_connections).disabled = False
 
-        innovation_set = genome1.innovation_set
-        inputs_num = genome1.inputs_num
-        outputs_num = genome1.outputs_num
+        innovation_set = better_genome.innovation_set
+        inputs_num = better_genome.inputs_num
+        outputs_num = better_genome.outputs_num
         child = Genome(child_id, innovation_set, child_nodes, child_connections, inputs_num, outputs_num)
 
         return child
+
+    @staticmethod
+    def get_more_fit_genome(genome1, genome2, n_genome1, n_genome2):
+        if genome1.fitness > genome2.fitness:
+            better_genome, worse_genome = genome1, genome2
+        elif genome1.fitness < genome2.fitness:
+            better_genome, worse_genome = genome2, genome1
+        else:
+            if n_genome1 == n_genome2:
+                rand = randint(0, 1)
+                better_genome, worse_genome = (genome1, genome2)[rand], (genome1, genome2)[abs(rand - 1)]
+            elif n_genome1 < n_genome2:
+                better_genome, worse_genome = genome1, genome2
+            else:
+                better_genome, worse_genome = genome2, genome1
+        return better_genome, worse_genome
 
     @staticmethod
     def compatibility_score(genome1, genome2):
