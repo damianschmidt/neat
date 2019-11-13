@@ -113,6 +113,11 @@ class NodeGene(Gene):
             distance += 1.0
         return distance * config.compatibility_weight_coefficient
 
+    def __str__(self):
+        string = f'Node ID: {self.node_id}, Bias: {self.bias}, Response: {self.response},' \
+                 f' Activation: {self.activation}, Aggregation: {self.aggregation}'
+        return string
+
 
 class ConnectionGene(Gene):
     def __init__(self, connection_id):
@@ -167,3 +172,7 @@ class ConnectionGene(Gene):
         if self.enabled != other_connection.enabled:
             distance += 1.0
         return distance * config.compatibility_weight_coefficient
+
+    def __str__(self):
+        string = f'Connection ID: {self.connection_id}, Weight: {self.weight}, Enabled: {self.enabled}'
+        return string
