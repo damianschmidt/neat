@@ -22,15 +22,15 @@ class Genome:
         parent1_nodes = parent1.nodes
         parent2_nodes = parent2.nodes
 
-        for gene_id, node_gene1 in parent1_nodes.items():
-            node_gene2 = parent2_nodes.get(gene_id)
-            assert gene_id not in self.nodes
+        for node_id, node_gene1 in parent1_nodes.items():
+            node_gene2 = parent2_nodes.get(node_id)
+            assert node_id not in self.nodes
             if node_gene2 is None:
                 # more gene in fittest parent - get it
-                self.nodes[gene_id] = node_gene1.copy()
+                self.nodes[node_id] = node_gene1.copy()
             else:
                 # combine from both
-                self.nodes[gene_id] = node_gene1.crossover(node_gene2)
+                self.nodes[node_id] = node_gene1.crossover(node_gene2)
 
         # inherit connections
         for connection_id, connection_gene1 in parent1.connections.items():
