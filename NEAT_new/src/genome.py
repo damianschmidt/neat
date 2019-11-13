@@ -1,3 +1,9 @@
+from itertools import count
+from random import random, choice
+
+from NEAT_new.src.genes import NodeGene, ConnectionGene
+
+
 class Genome:
     def __init__(self, genome_id):
         self.genome_id = genome_id
@@ -42,8 +48,114 @@ class Genome:
                 # combine from both
                 self.connections[connection_id] = connection_gene1.crossover(connection_gene2)
 
-    def mutate(self):
-        pass
+    def mutate(self, config):
+        if random() < config.node_add_prob:
+            self.mutate_add_node()
+        if random() < config.node_delete_prob:
+            self.mutate_remove_node()
+        if random() < config.conn_add_prob:
+            self.mutate_add_connection()
+        if random() < config.conn_remove_prob:
+            self.mutate_remove_connection()
+
+        # mutate nodes
+        for node_gene in self.nodes.values():
+            node_gene.mutate(config)
+
+        # mutate connections
+        for connection_gene in self.connections.values():
+            connection_gene.mutate(config)
+
+    def mutate_add_node(self):
+        # random connection to divide
+        connection_to_divide = choice(list(self.connections.values()))
+        new_node_id = self.get_new_node_id(self.nodes)
+        node_gene = NodeGene(new_node_id, 'HIDDEN')
+        self.nodes[new_node_id] = node_gene
+
+        # disable connection and create two new connections
+        connection_to_divide.enabled = False
+        i, o = connection_to_divide.connection_id
+
+        conn1 = ConnectionGene((i, new_node_id))
+        conn1.weight = 1.0
+        self.connections[conn1.connection_id] = conn1
+
+        conn2 = ConnectionGene((new_node_id, o))
+        conn2.weight = connection_to_divide.weight
+        self.connections[conn2.connection_id] = conn2
+
+    def mutate_remove_node(self):
+        available_nodes = [node_id for node_id, node in self.nodes.items() if node.node_type == 'HIDDEN']
+        if not available_nodes:
+            return -1
+
+        delete_id = choice(available_nodes)
+
+        connections_to_delete = set()
+        for k, v in self.connections.items():
+            if delete_id in v.connection_id:
+                connections_to_delete.add(v.connection_id)
+
+        for connection_id in connections_to_delete:
+            del self.connections[connection_id]
+
+        del self.nodes[delete_id]
+        return delete_id
+
+    def mutate_add_connection(self):
+        possible_outputs = [node_id for node_id, node in self.nodes.items() if node.node_type != 'INPUT']
+        out_node = choice(possible_outputs)
+
+        possible_inputs = list(self.nodes.keys())
+        in_node = choice(possible_inputs)
+
+        # do not duplicate connections
+        connection_id = (in_node, out_node)
+        if connection_id in self.connections:
+            return
+
+        # do not connect outputs
+        if in_node.node_type == 'OUTPUT' and out_node.node_type == 'OUTPUT':
+            return
+
+        # avoid creating cycles
+        if self.creates_cycle(connection_id):
+            return
+
+        connection_gene = ConnectionGene(connection_id)
+        self.connections[connection_id] = connection_gene
+
+    def mutate_remove_connection(self):
+        if self.connections:
+            connection_id = choice(list(self.connections.keys()))
+            del self.connections[connection_id]
+
+    @staticmethod
+    def get_new_node_id(node_dict):
+        indexer = count(max(list(node_dict.keys())) + 1)
+        new_id = next(indexer)
+        assert new_id not in node_dict
+        return new_id
+
+    def creates_cycle(self, test_id):
+        i, o = test_id
+        if i == o:
+            return True
+
+        visited = {o}
+        while True:
+            num_added = 0
+            for a, b in list(self.connections.keys()):
+                if a in visited and b not in visited:
+                    if b == i:
+                        return True
+
+                    visited.add(b)
+                    num_added += 1
+
+            if num_added == 0:
+                return False
 
     def distance(self):
         pass

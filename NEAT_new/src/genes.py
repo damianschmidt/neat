@@ -21,8 +21,9 @@ class Gene(ABC):
 
 
 class NodeGene(Gene):
-    def __init__(self, node_id):
+    def __init__(self, node_id, node_type):
         self.node_id = node_id
+        self.node_type = node_type
         self.bias = 0.0
         self.response = 0.0
         self.activation = 'sigmoid'
@@ -114,8 +115,8 @@ class NodeGene(Gene):
         return distance * config.compatibility_weight_coefficient
 
     def __str__(self):
-        string = f'Node ID: {self.node_id}, Bias: {self.bias}, Response: {self.response},' \
-                 f' Activation: {self.activation}, Aggregation: {self.aggregation}'
+        string = f'Node ID: {self.node_id}, Node type: {self.node_type} Bias: {self.bias}, ' \
+                 f'Response: {self.response}, Activation: {self.activation}, Aggregation: {self.aggregation}'
         return string
 
 
