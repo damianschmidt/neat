@@ -1,4 +1,8 @@
 class Config:
+    # NEAT parameters
+    population_size = 150
+    fitness_threshold = None
+
     # genome default structure
     num_inputs = 2
     num_hidden = 0

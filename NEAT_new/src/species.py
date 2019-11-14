@@ -16,4 +16,10 @@ class Species:
         members_fitness = [member.fitness for member in self.members.values()]
         return members_fitness
 
-# SpeciesSet?
+
+class SpeciesSet:
+    def __init__(self):
+        self.species = {}
+
+    def speciate(self, config, population, generation):
+        pass
