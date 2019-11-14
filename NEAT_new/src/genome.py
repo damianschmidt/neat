@@ -11,8 +11,60 @@ class Genome:
         self.nodes = {}
         self.fitness = None
 
-    def create_new(self):
-        pass
+    def create_new(self, config):
+        # add inputs
+        for i in range(config.num_inputs):
+            node_id = self.get_new_node_id(self.nodes)
+            assert node_id not in self.nodes
+            self.nodes[node_id] = NodeGene(node_id, 'INPUT')
+
+        # add outputs
+        for i in range(config.num_outputs):
+            node_id = self.get_new_node_id(self.nodes)
+            assert node_id not in self.nodes
+            self.nodes[node_id] = NodeGene(node_id, 'OUTPUT')
+
+        # add hidden nodes
+        if config.num_hidden > 0:
+            for i in range(config.num_hidden):
+                node_id = self.get_new_node_id(self.nodes)
+                assert node_id not in self.nodes
+                self.nodes[node_id] = NodeGene(node_id, 'HIDDEN')
+
+        # add connections
+        if 'fs_neat' in config.initial_connection:
+            # without hidden
+            inputs = {node_id: node for node_id, node in self.nodes.items() if node.node_type == 'INPUT'}
+            outputs = {node_id: node for node_id, node in self.nodes.items() if node.node_type == 'OUTPUT'}
+
+            # randomly connect one input to all output nodes
+            input_id = choice(inputs.keys())
+            for output_id in outputs.keys():
+                connection = ConnectionGene((input_id, output_id))
+                self.connections[connection.connection_id] = connection
+
+        elif 'full' in config.initial_connection:
+            inputs_keys = [i for i, node in self.nodes.items() if node.node_type == 'INPUT']
+            outputs_keys = [i for i, node in self.nodes.items() if node.node_type == 'OUTPUT']
+            hidden_keys = [i for i, node in self.nodes.items() if node.node_type == 'HIDDEN']
+            connections = []
+            if hidden_keys:
+                for input_id in inputs_keys:
+                    for hidden_id in hidden_keys:
+                        connections.append((input_id, hidden_id))
+                for hidden_id in hidden_keys:
+                    for output_id in outputs_keys:
+                        connections.append((hidden_id, output_id))
+            if not hidden_keys:
+                for input_id in inputs_keys:
+                    for output_id in outputs_keys:
+                        connections.append((input_id, output_id))
+
+            for input_id, output_id in connections:
+                connection = ConnectionGene((input_id, output_id))
+                self.connections[connection.connection_id] = connection
+
+        # maybe partial also later
 
     def crossover(self, genome1, genome2):
         assert isinstance(genome1.fitness, (int, float))
@@ -179,7 +231,7 @@ class Genome:
 
             max_nodes_len = max(len(my_nodes), len(other_nodes))
             node_distance = (node_distance + (
-                        disjoint_nodes * config.compatibility_disjoint_coefficient)) / max_nodes_len
+                    disjoint_nodes * config.compatibility_disjoint_coefficient)) / max_nodes_len
 
         # count connection genes distance
         connection_distance = 0.0
@@ -198,7 +250,7 @@ class Genome:
 
             max_conn_len = max(len(self.connections), len(other_genome.connections))
             connection_distance = (connection_distance + (
-                        config.compatibility_disjoint_coefficient * disjoint_connections)) / max_conn_len
+                    config.compatibility_disjoint_coefficient * disjoint_connections)) / max_conn_len
 
         distance = node_distance + connection_distance
         return distance

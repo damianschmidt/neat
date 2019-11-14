@@ -1,4 +1,12 @@
 class Config:
+    # genome default structure
+    num_inputs = 2
+    num_hidden = 0
+    num_outputs = 1
+
+    initial_connection = 'full'
+
+    # genome compatibility
     compatibility_weight_coefficient = 0.5
     compatibility_disjoint_coefficient = 1.0
 
