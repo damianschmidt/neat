@@ -157,8 +157,51 @@ class Genome:
             if num_added == 0:
                 return False
 
-    def distance(self):
-        pass
+    def distance(self, other_genome, config):
+        # count node genes distance
+        # get node without input nodes
+        my_nodes = {node_id: node for node_id, node in self.nodes.items() if node.node_type != 'INPUT'}
+        other_nodes = {node_id: node for node_id, node in other_genome.nodes.items() if node.node_type != 'INPUT'}
+
+        node_distance = 0.0
+        if my_nodes or other_nodes:
+            disjoint_nodes = 0
+            for k2 in other_nodes.keys():
+                if k2 not in my_nodes:
+                    disjoint_nodes += 1
+
+            for k1, node1 in my_nodes.items():
+                node2 = other_nodes.get(k1)
+                if node2 is None:
+                    disjoint_nodes += 1
+                else:
+                    node_distance += node1.distance(node2, config)
+
+            max_nodes_len = max(len(my_nodes), len(other_nodes))
+            node_distance = (node_distance + (
+                        disjoint_nodes * config.compatibility_disjoint_coefficient)) / max_nodes_len
+
+        # count connection genes distance
+        connection_distance = 0.0
+        if self.connections or other_genome.connections:
+            disjoint_connections = 0
+            for k2 in other_genome.connections.keys():
+                if k2 not in self.connections:
+                    disjoint_connections += 1
+
+            for k1, conn1 in self.connections.items():
+                conn2 = other_genome.connections.get(k1)
+                if conn2 is None:
+                    disjoint_connections += 1
+                else:
+                    connection_distance += conn1.distance(conn2, config)
+
+            max_conn_len = max(len(self.connections), len(other_genome.connections))
+            connection_distance = (connection_distance + (
+                        config.compatibility_disjoint_coefficient * disjoint_connections)) / max_conn_len
+
+        distance = node_distance + connection_distance
+        return distance
 
     def size(self):
         number_of_enabled_conn = sum([1 for connection_gene in self.connections.values() if connection_gene.enabled])

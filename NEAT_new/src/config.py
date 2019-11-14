@@ -1,5 +1,6 @@
 class Config:
     compatibility_weight_coefficient = 0.5
+    compatibility_disjoint_coefficient = 1.0
 
     # genome mutation
     node_add_prob = 0.2
@@ -7,7 +8,7 @@ class Config:
     conn_add_prob = 0.5
     conn_delete_prob = 0.5
 
-    # node mutate rate
+    # node mutation
     bias_mutate_rate = 0.7
     bias_mutate_power = 0.5
     bias_replace_rate = 0.1
@@ -30,7 +31,7 @@ class Config:
     aggregation_mutate_rate = 0.0
     aggregation_options = ['sum']
 
-    # connection mutate rate
+    # connection mutation
     weight_mutate_rate = 0.8
     weight_mutate_power = 0.5
     weight_replace_rate = 0.1
