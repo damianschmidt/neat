@@ -1,5 +1,6 @@
 from NEAT_new.src.reproduction import Reproduction
 from NEAT_new.src.species import SpeciesSet
+from NEAT_new.src.stagnation import Stagnation
 
 
 class GeneticAlgorithm:
@@ -7,7 +8,8 @@ class GeneticAlgorithm:
         self.generation = 0
         self.best = None
         self.config = config
-        self.reproduction = Reproduction()
+        self.stagnation = Stagnation()
+        self.reproduction = Reproduction(self.stagnation)
         self.population = self.reproduction.create_new(config.population_size)
         self.species = SpeciesSet()
         self.species.speciate(config, self.population, self.generation)
@@ -39,7 +41,8 @@ class GeneticAlgorithm:
                     break
 
             # create new generation from current
-            self.population = self.reproduction.reproduce()  # Add arguments
+            self.population = self.reproduction.reproduce(self.config, self.species, self.config.population_size,
+                                                          self.generation)
 
             # check for dead species
             # do it later
@@ -50,4 +53,3 @@ class GeneticAlgorithm:
             self.generation += 1
 
         return self.best
-

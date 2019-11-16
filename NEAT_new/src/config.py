@@ -56,3 +56,7 @@ class Config:
 
     # species
     compatibility_threshold = 3.0
+
+    # reproduction
+    elitism = 2
+    survival_threshold = 0.2
