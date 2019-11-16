@@ -95,6 +95,9 @@ class SpeciesSet:
 
         # report!
 
+    def get_species_id(self, individual_id):
+        return self.genome_to_species[individual_id]
+
 
 class Distances:
     def __init__(self, config):
