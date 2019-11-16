@@ -60,3 +60,7 @@ class Config:
     # reproduction
     elitism = 2
     survival_threshold = 0.2
+
+    # stagnation
+    species_fitness_func = max
+    max_stagnation = 20

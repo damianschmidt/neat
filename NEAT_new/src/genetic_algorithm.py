@@ -8,7 +8,7 @@ class GeneticAlgorithm:
         self.generation = 0
         self.best = None
         self.config = config
-        self.stagnation = Stagnation()
+        self.stagnation = Stagnation(config)
         self.reproduction = Reproduction(self.stagnation)
         self.population = self.reproduction.create_new(config.population_size)
         self.species = SpeciesSet()

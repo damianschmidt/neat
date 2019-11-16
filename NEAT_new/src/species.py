@@ -11,6 +11,7 @@ class Species:
         self.mascot = None
         self.fitness = 0.0
         self.adjusted_fitness = 0.0
+        self.fitness_history = []
 
     def updated_species(self, mascot, members):
         self.mascot = mascot
