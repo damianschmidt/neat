@@ -53,3 +53,6 @@ class Config:
     weight_init_stdev = 1.0
 
     enabled_mutate_rate = 0.01
+
+    # species
+    compatibility_threshold = 3.0
