@@ -123,7 +123,7 @@ class NodeGene(Gene):
 class ConnectionGene(Gene):
     def __init__(self, connection_id):
         self.connection_id = connection_id
-        self.weight = random()
+        self.weight = 0.0
         self.enabled = True
 
     def copy(self):

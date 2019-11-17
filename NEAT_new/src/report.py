@@ -101,6 +101,7 @@ class Reporter:
 
     def found_solution(self, best):
         print(f'\nBEST INDIVIDUAL IN GENERATION {self.generation}, COMPLEXITY: {best.size()}')
+        print('PROBLEM SOLVED!!!!!!!!!!!!!!!!!!!!!!!!')
 
     def species_stagnant(self, species_id, species):
         if self.species_details:
