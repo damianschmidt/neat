@@ -16,9 +16,9 @@ class Config:
 
     # genome mutation
     node_add_prob = 0.2
-    node_delete_prob = 0.2
+    node_remove_prob = 0.2
     conn_add_prob = 0.5
-    conn_delete_prob = 0.5
+    conn_remove_prob = 0.5
 
     # node mutation
     bias_mutate_rate = 0.7

@@ -25,12 +25,12 @@ class NodeGene(Gene):
         self.node_id = node_id
         self.node_type = node_type
         self.bias = 0.0
-        self.response = 0.0
+        self.response = 1.0
         self.activation = 'sigmoid'
         self.aggregation = 'sum'
 
     def copy(self):
-        node_copy = self.__class__(self.node_id)
+        node_copy = self.__class__(self.node_id, self.node_type)
         node_copy.bias = self.bias
         node_copy.response = self.response
         node_copy.activation = self.activation
@@ -39,7 +39,7 @@ class NodeGene(Gene):
 
     def crossover(self, other_node):
         assert self.node_id == other_node.node_id
-        crossover_node = self.__class__(self.node_id)
+        crossover_node = self.__class__(self.node_id, self.node_type)
         crossover_node.bias = self.bias if random() > 0.5 else other_node.bias
         crossover_node.response = self.response if random() > 0.5 else other_node.response
         crossover_node.activation = self.activation if random() > 0.5 else other_node.activation
@@ -123,7 +123,7 @@ class NodeGene(Gene):
 class ConnectionGene(Gene):
     def __init__(self, connection_id):
         self.connection_id = connection_id
-        self.weight = 0.0
+        self.weight = random()
         self.enabled = True
 
     def copy(self):

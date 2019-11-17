@@ -16,10 +16,10 @@ class Network:
             self.values[v] = k
 
         for node, activation_function, aggregation_function, bias, response, links in self.node_evals:
-            inputs = []
+            node_inputs = []
             for i, w in links:
-                inputs.append(self.values[i] * w)
-            s = aggregation_function(inputs)
+                node_inputs.append(self.values[i] * w)
+            s = aggregation_function(node_inputs)
             self.values[node] = activation_function(bias + response * s)
 
         return [self.values[i] for i in self.outputs]
@@ -48,7 +48,7 @@ class Network:
                 else:
                     aggregation_function = None
                 if node_gene.activation == 'sigmoid':
-                    activation_function = self.sigmoid
+                    activation_function = Network.sigmoid
                 else:
                     activation_function = None
 

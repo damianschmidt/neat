@@ -103,7 +103,7 @@ class Genome:
     def mutate(self, config):
         if random() < config.node_add_prob:
             self.mutate_add_node()
-        if random() < config.node_delete_prob:
+        if random() < config.node_remove_prob:
             self.mutate_remove_node()
         if random() < config.conn_add_prob:
             self.mutate_add_connection()
@@ -168,7 +168,7 @@ class Genome:
             return
 
         # do not connect outputs
-        if in_node.node_type == 'OUTPUT' and out_node.node_type == 'OUTPUT':
+        if self.nodes[in_node].node_type == 'OUTPUT' and self.nodes[out_node].node_type == 'OUTPUT':
             return
 
         # avoid creating cycles
@@ -185,8 +185,11 @@ class Genome:
 
     @staticmethod
     def get_new_node_id(node_dict):
-        indexer = count(max(list(node_dict.keys())) + 1)
-        new_id = next(indexer)
+        try:
+            indexer = count(max(list(node_dict.keys())) + 1)
+            new_id = next(indexer)
+        except ValueError:
+            new_id = 0
         assert new_id not in node_dict
         return new_id
 
@@ -262,10 +265,9 @@ class Genome:
     def __str__(self):
         string = f'ID: {self.genome_id}\nFitness: {self.fitness}\nNodes:'
         for k, node_gene in self.nodes.items():
-            string += f'\n\t{k} {node_gene}'
+            string += f'\n\t{node_gene}'
         string += '\nConnections:'
         connections = list(self.connections.values())
-        connections.sort()
         for conn in connections:
-            string += f'\n\t {conn}'
+            string += f'\n\t{conn}'
         return string

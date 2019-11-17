@@ -7,17 +7,19 @@ from NEAT_new.src.genome import Genome
 
 
 class Reproduction:
-    def __init__(self, stagnation, reporters):
+    def __init__(self, stagnation, reporters, config):
         self.genome_indexer = count(1)
         self.ancestors = {}
         self.stagnation = stagnation
         self.reporters = reporters
+        self.config = config
 
     def create_new(self, num_genome):
         new_genomes = {}
         for i in range(num_genome):
             genome_id = next(self.genome_indexer)
             g = Genome(genome_id)
+            g.create_new(self.config)
             new_genomes[genome_id] = g
             self.ancestors[genome_id] = tuple()
 
@@ -39,9 +41,9 @@ class Reproduction:
             if abs(c) > 0:
                 sp += c
             elif d > 0:
-                spawn += 1
+                sp += 1
             elif d < 0:
-                spawn -= 1
+                sp -= 1
 
             spawn.append(sp)
 
@@ -89,7 +91,7 @@ class Reproduction:
         for spawn, s in zip(spawn_amounts, remaining_species):
             spawn = max(spawn, config.elitism)
 
-            old_members = list(species.members.items())
+            old_members = list(s.members.items())
             s.members = {}
             species.species[s.species_id] = s
 

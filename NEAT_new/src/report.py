@@ -61,8 +61,8 @@ class Reporter:
             print(f'Population members: {num_genomes}\tNumber of species: {num_species}')
             species_ids = list(species_set.species.keys())
             species_ids.sort()
-            print(f'\t ID \tAGE\tSIZE\tFITNESS\tADJ FIT\tSTAGNATION\n'
-                  f'\t____\t___\t____\t_______\t_______\t__________')
+            print(f'\t ID \t AGE \t SIZE \t FITNESS \t ADJ FIT \t STAGNATION \n'
+                  f'\t____\t ___ \t ____ \t _______ \t _______ \t __________ ')
             for species_id in species_ids:
                 species = species_set.species[species_id]
                 age = self.generation - species.created_generation
@@ -71,7 +71,7 @@ class Reporter:
                 adjusted_fitness = 'NONE' if species.adjusted_fitness is None else species.adjusted_fitness
                 stagnation = self.generation - species.last_improved
                 print(
-                    f'\t{species_id: >4}\t{age: >3}\t{size: >4}\t{fitness: >7}\t{adjusted_fitness: >7}\t{stagnation: >10}')
+                    f'\t{species_id: >4}\t {age: >3} \t {size: >4} \t {fitness:.5f} \t {adjusted_fitness:.5f} \t {stagnation: >10}')
         else:
             print(f'Population members: {num_genomes}\tNumber of species: {num_species}')
 

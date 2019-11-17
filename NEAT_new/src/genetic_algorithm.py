@@ -11,7 +11,7 @@ class GeneticAlgorithm:
         self.config = config
         self.reporters = ReporterSet()
         self.stagnation = Stagnation(config)
-        self.reproduction = Reproduction(self.stagnation, self.reporters)
+        self.reproduction = Reproduction(self.stagnation, self.reporters, config)
         self.population = self.reproduction.create_new(config.population_size)
         self.species = SpeciesSet(self.reporters)
         self.species.speciate(config, self.population, self.generation)
@@ -24,7 +24,7 @@ class GeneticAlgorithm:
             self.reporters.start_generation(self.generation)
 
             # evaluate all genomes
-            fitness_function(list(self.population.items()), self.config)
+            fitness_function(list(self.population.items()))
 
             # get best and report
             best = None
@@ -45,6 +45,10 @@ class GeneticAlgorithm:
             # create new generation from current
             self.population = self.reproduction.reproduce(self.config, self.species, self.config.population_size,
                                                           self.generation)
+            # for genome in self.population.values():
+            #     x = [x for x in genome.nodes.values() if x.node_type == 'HIDDEN']
+            #     if len(x) > 0:
+            #         print(genome.fitness)
 
             # check for dead species
             if not self.species.species:
