@@ -44,20 +44,20 @@ class Genome:
                 self.connections[connection.connection_id] = connection
 
         elif 'full' in config.initial_connection:
-            inputs_keys = [i for i, node in self.nodes.items() if node.node_type == 'INPUT']
-            outputs_keys = [i for i, node in self.nodes.items() if node.node_type == 'OUTPUT']
-            hidden_keys = [i for i, node in self.nodes.items() if node.node_type == 'HIDDEN']
+            inputs_ids = [i for i, node in self.nodes.items() if node.node_type == 'INPUT']
+            outputs_ids = [i for i, node in self.nodes.items() if node.node_type == 'OUTPUT']
+            hidden_ids = [i for i, node in self.nodes.items() if node.node_type == 'HIDDEN']
             connections = []
-            if hidden_keys:
-                for input_id in inputs_keys:
-                    for hidden_id in hidden_keys:
+            if hidden_ids:
+                for input_id in inputs_ids:
+                    for hidden_id in hidden_ids:
                         connections.append((input_id, hidden_id))
-                for hidden_id in hidden_keys:
-                    for output_id in outputs_keys:
+                for hidden_id in hidden_ids:
+                    for output_id in outputs_ids:
                         connections.append((hidden_id, output_id))
-            if not hidden_keys:
-                for input_id in inputs_keys:
-                    for output_id in outputs_keys:
+            if not hidden_ids:
+                for input_id in inputs_ids:
+                    for output_id in outputs_ids:
                         connections.append((input_id, output_id))
 
             for input_id, output_id in connections:
