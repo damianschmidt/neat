@@ -12,8 +12,8 @@ class Network:
         if len(self.inputs) != len(inputs):
             raise RuntimeError('Wrong number of inputs!')
 
-        for k, v in zip(self.inputs, inputs):
-            self.values[v] = k
+        for i_id, i_val in zip(self.inputs, inputs):
+            self.values[i_id] = i_val
 
         for node, activation_function, aggregation_function, bias, response, links in self.node_evals:
             node_inputs = []

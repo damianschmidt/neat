@@ -1,5 +1,3 @@
-import time
-
 from NEAT_new.src.config import Config
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
