@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='NEAT',
-    version='1.2.0',
+    version='2.1.0',
     author='Damian Schmidt',
     author_email='damian.schmidt97@gmail.com',
     packages=find_packages(),
     install_requires=[
-        'graphics.py', 'numpy'
+        'graphics.py', 'numpy', 'pygame'
     ],
     tests_require=[
         'parameterized'

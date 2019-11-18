@@ -64,3 +64,13 @@ class Config:
     # stagnation
     species_fitness_func = max
     max_stagnation = 20
+
+
+class ConfigFlappyBird(Config):
+    # NEAT parameters
+    fitness_threshold = 50
+
+    # genome default structure
+    num_inputs = 3
+    num_hidden = 0
+    num_outputs = 1
