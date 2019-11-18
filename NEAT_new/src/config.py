@@ -74,3 +74,13 @@ class ConfigFlappyBird(Config):
     num_inputs = 3
     num_hidden = 0
     num_outputs = 1
+
+
+class ConfigDino(Config):
+    # NEAT parameters
+    fitness_threshold = 650
+
+    # genome default structure
+    num_inputs = 6
+    num_hidden = 0
+    num_outputs = 2
