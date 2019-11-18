@@ -1,9 +1,10 @@
 # Praca inżynierska - program
 
 ### TODO:
-- [ ] NEAT_legacy
-    - After first generation one of inputs change node type to HIDDEN. This cause problem with evaluation.
-- [ ] NEAT_old
-    - Algorithm evaluate genomes and works but can not solve xor problem.
-- [ ] NEAT_new
-    - Three times lucky
+- NEAT_new
+    - Add Sonic
+    - Add saving and loading best genome
+    - Add visualization
+    - Add tests
+    - Add different activation functions (especially that described in NEAT paper)
+    - Add another game
