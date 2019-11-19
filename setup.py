@@ -7,7 +7,7 @@ setup(
     author_email='damian.schmidt97@gmail.com',
     packages=find_packages(),
     install_requires=[
-        'graphics.py', 'numpy', 'pygame'
+        'graphics.py', 'numpy', 'pygame', 'gym-retro',
     ],
     tests_require=[
         'parameterized'
