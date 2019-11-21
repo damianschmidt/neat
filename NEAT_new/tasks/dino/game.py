@@ -5,7 +5,6 @@ from math import floor
 from NEAT_new.src.config import ConfigDino
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
-from NEAT_new.src.report import Reporter
 from NEAT_new.tasks.dino.dino import Dino
 from NEAT_new.tasks.dino.ground import Ground
 from NEAT_new.tasks.dino.cactus import Cactus
@@ -218,7 +217,6 @@ class Game:
     def run_neat(self):
         config = ConfigDino()
         p = GeneticAlgorithm(config)
-        p.reporters.add(Reporter(True))
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')
 

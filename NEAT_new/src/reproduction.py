@@ -7,11 +7,10 @@ from NEAT_new.src.genome import Genome
 
 
 class Reproduction:
-    def __init__(self, stagnation, reporters, config):
+    def __init__(self, stagnation, config):
         self.genome_indexer = count(1)
         self.ancestors = {}
         self.stagnation = stagnation
-        self.reporters = reporters
         self.config = config
 
     def create_new(self, num_genome):
@@ -58,7 +57,7 @@ class Reproduction:
         remaining_species = []
         for stag_species_id, stag_species, stag in self.stagnation.update(species, generation):
             if stag:
-                self.reporters.species_stagnant(stag_species_id, stag_species)
+                print(f'\nSPECIES {stag_species_id} WITH {len(stag_species.members)} MEMBERS IS STAGNANT: REMOVING IT')
             else:
                 all_fitnesses.extend(member.fitness for member in stag_species.members.values())
                 remaining_species.append(stag_species)
@@ -78,7 +77,7 @@ class Reproduction:
 
         adjusted_fitness = [species.adjusted_fitness for species in remaining_species]
         average_adjusted_fitness = mean(adjusted_fitness)
-        self.reporters.info(f'AVERAGE ADJUSTED FITNESS: {average_adjusted_fitness:.3f}')
+        print(f'AVERAGE ADJUSTED FITNESS: {average_adjusted_fitness:.3f}')
 
         # size of members for each species in the new generation
         old_size = [len(species.members) for species in remaining_species]

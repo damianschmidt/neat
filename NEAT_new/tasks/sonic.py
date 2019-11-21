@@ -5,7 +5,6 @@ import retro
 from NEAT_new.src.config import ConfigSonic
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
-from NEAT_new.src.report import Reporter
 
 
 def evaluate_genome(genomes):
@@ -71,7 +70,6 @@ def evaluate_genome(genomes):
 def run():
     config = ConfigSonic()
     population = GeneticAlgorithm(config)
-    population.reporters.add(Reporter(True))
     winner = population.run(evaluate_genome, 50)
 
     print(f'\nBEST GENOME:\n{winner}')

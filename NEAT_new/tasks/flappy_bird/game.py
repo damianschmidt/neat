@@ -3,7 +3,6 @@ import pygame
 from NEAT_new.src.config import ConfigFlappyBird
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
-from NEAT_new.src.report import Reporter
 from NEAT_new.tasks.flappy_bird.bird import Bird
 from NEAT_new.tasks.flappy_bird.pipe import Pipe
 from NEAT_new.tasks.flappy_bird.ground import Ground
@@ -220,6 +219,5 @@ class Game:
     def run_neat(self):
         config = ConfigFlappyBird()
         p = GeneticAlgorithm(config)
-        p.reporters.add(Reporter(True))
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')

@@ -23,11 +23,10 @@ class Species:
 
 
 class SpeciesSet:
-    def __init__(self, reporters):
+    def __init__(self):
         self.species = {}
         self.indexer = count(1)
         self.genome_to_species = {}
-        self.reporters = reporters
 
     def speciate(self, config, population, generation):
         assert isinstance(population, dict)
@@ -91,10 +90,9 @@ class SpeciesSet:
             members_dict = {genome_id: population[genome_id] for genome_id in members}
             species.updated_species(population[mascot_id], members_dict)
 
-        genomes_distance_mean = mean(distances.distances.values())  # not sure it will work
-        genomes_distance_stdev = stdev(distances.distances.values())  # same
-        self.reporters.info(
-            f'MEAN GENETIC DISTANCE: {genomes_distance_mean:.3f}, STANDARD DEVIATION {genomes_distance_stdev:.3f}')
+        genomes_distance_mean = mean(distances.distances.values())
+        genomes_distance_stdev = stdev(distances.distances.values())
+        print(f'MEAN GENETIC DISTANCE: {genomes_distance_mean:.3f}, STANDARD DEVIATION {genomes_distance_stdev:.3f}')
 
     def get_species_id(self, individual_id):
         return self.genome_to_species[individual_id]
