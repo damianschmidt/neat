@@ -2,7 +2,6 @@
 
 ### TODO:
 - NEAT_new
-    - Add saving and loading best genome
     - Add Sonic (make faster)
     - Add visualization
     - Add another game
