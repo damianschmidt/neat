@@ -84,3 +84,14 @@ class ConfigDino(Config):
     num_inputs = 6
     num_hidden = 0
     num_outputs = 2
+
+
+class ConfigSonic(Config):
+    # NEAT parameters
+    population_size = 20
+    fitness_threshold = 100000
+
+    # genome default structure
+    num_inputs = 1120
+    num_hidden = 0
+    num_outputs = 12
