@@ -220,12 +220,19 @@ class Game:
             self.draw_screen(birds, pipes, ground, pipe_index, True)
 
     def run_neat(self):
+        try:
+            with open('./results/winner_flappy_bird.pkl', 'rb') as input_file:
+                default_genome = pickle.load(input_file)
+        except FileNotFoundError:
+            print('No previous winner data! Create new genome set')
+            default_genome = None
+
         config = ConfigFlappyBird()
-        p = GeneticAlgorithm(config)
+        p = GeneticAlgorithm(config, default_genome)
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')
 
         dir_name = './results/'
         os.makedirs(os.path.dirname(dir_name), exist_ok=True)
-        with open('results/winner_xor.pkl', 'wb') as output:
+        with open('results/winner_flappy_bird.pkl', 'wb') as output:
             pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)

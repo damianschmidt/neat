@@ -7,13 +7,13 @@ from NEAT_new.src.stagnation import Stagnation
 
 
 class GeneticAlgorithm:
-    def __init__(self, config):
+    def __init__(self, config, default_genome=None):
         self.generation = 0
         self.best = None
         self.config = config
         self.stagnation = Stagnation(config)
         self.reproduction = Reproduction(self.stagnation, config)
-        self.population = self.reproduction.create_new(config.population_size)
+        self.population = self.reproduction.create_new(config.population_size, default_genome)
         self.species = SpeciesSet()
         self.species.speciate(config, self.population, self.generation)
         self.generation_start = None

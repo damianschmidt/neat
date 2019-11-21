@@ -19,8 +19,15 @@ def evaluate_genome(genomes):
 
 
 def run():
+    try:
+        with open('./results/winner_xor.pkl', 'rb') as input_file:
+            default_genome = pickle.load(input_file)
+    except FileNotFoundError:
+        print('No previous winner data! Create new genome set')
+        default_genome = None
+
     config = Config()
-    population = GeneticAlgorithm(config)
+    population = GeneticAlgorithm(config, default_genome)
     winner = population.run(evaluate_genome, 300)
 
     print(f'\nBEST GENOME:\n{winner}')

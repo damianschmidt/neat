@@ -13,12 +13,16 @@ class Reproduction:
         self.stagnation = stagnation
         self.config = config
 
-    def create_new(self, num_genome):
+    def create_new(self, num_genome, default_genome):
         new_genomes = {}
         for i in range(num_genome):
             genome_id = next(self.genome_indexer)
             g = Genome(genome_id)
-            g.create_new(self.config)
+            if default_genome is None:
+                g.create_new(self.config)
+            else:
+                g.connections = default_genome.connections
+                g.nodes = default_genome.nodes
             new_genomes[genome_id] = g
             self.ancestors[genome_id] = tuple()
 
