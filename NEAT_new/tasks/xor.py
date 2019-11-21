@@ -1,3 +1,6 @@
+import os
+import pickle
+
 from NEAT_new.src.config import Config
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
@@ -21,6 +24,11 @@ def run():
     winner = population.run(evaluate_genome, 300)
 
     print(f'\nBEST GENOME:\n{winner}')
+
+    dir_name = './results/'
+    os.makedirs(os.path.dirname(dir_name), exist_ok=True)
+    with open('results/winner_xor.pkl', 'wb') as output:
+        pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':

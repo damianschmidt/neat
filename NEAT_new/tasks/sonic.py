@@ -1,3 +1,6 @@
+import os
+import pickle
+
 import cv2
 import numpy as np
 import retro
@@ -73,6 +76,11 @@ def run():
     winner = population.run(evaluate_genome, 50)
 
     print(f'\nBEST GENOME:\n{winner}')
+
+    dir_name = './results/'
+    os.makedirs(os.path.dirname(dir_name), exist_ok=True)
+    with open('results/winner_xor.pkl', 'wb') as output:
+        pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':

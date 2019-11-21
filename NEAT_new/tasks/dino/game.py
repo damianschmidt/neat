@@ -1,3 +1,6 @@
+import os
+import pickle
+
 import pygame
 from random import randint
 from math import floor
@@ -219,6 +222,11 @@ class Game:
         p = GeneticAlgorithm(config)
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')
+
+        dir_name = './results/'
+        os.makedirs(os.path.dirname(dir_name), exist_ok=True)
+        with open('results/winner_xor.pkl', 'wb') as output:
+            pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
     def draw_what_dino_know(self, distance_to_next_obstacle, height_of_obstacle, width_of_obstacle, speed,
                             dino_y, gap_between_obstacles):
