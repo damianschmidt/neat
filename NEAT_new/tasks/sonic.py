@@ -25,10 +25,10 @@ def evaluate_genome(genomes):
         current_max_fitness = 0
         counter = 0
         xpos_max = 0
-        rings_max = 0
+        # rings_max = 0
 
         while not done:
-            env.render()
+            # env.render()
             ob = cv2.resize(ob, (inx, iny))
             ob = cv2.cvtColor(ob, cv2.COLOR_BGR2GRAY)
             ob = np.reshape(ob, (inx, iny))
@@ -40,18 +40,18 @@ def evaluate_genome(genomes):
 
             xpos = info['x']
             xpos_end = info['screen_x_end']
-            rings = info['rings']
+            # rings = info['rings']
 
-            fitness_current += rew
+            # fitness_current += rew
 
             if xpos > xpos_max:
                 fitness_current += 1
                 xpos_max = xpos
 
-            if rings > rings_max:
-                fitness_current += 10
-                rings_max = rings
-
+            # if rings > rings_max:
+            #     fitness_current += 10
+            #     rings_max = rings
+            #
             if xpos == xpos_end and xpos > 100:
                 fitness_current += 100000
                 done = True
@@ -62,12 +62,12 @@ def evaluate_genome(genomes):
             else:
                 counter += 1
 
-            if counter == 180:
+            if counter == 250:
                 done = True
                 print(genome_id, genome.fitness)
 
             genome.fitness = fitness_current
-    env.render(close=True)
+    # env.render(close=True)
 
 
 def run():

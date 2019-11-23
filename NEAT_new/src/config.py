@@ -68,7 +68,7 @@ class Config:
 
 class ConfigFlappyBird(Config):
     # NEAT parameters
-    fitness_threshold = 50
+    fitness_threshold = 5000
 
     # genome default structure
     num_inputs = 3
