@@ -28,6 +28,9 @@ def run():
 
     config = Config()
     population = GeneticAlgorithm(config, default_genome)
+    # stats = neat.StatisticsReporter()
+    # p.add_reporter(stats)
+
     winner = population.run(evaluate_genome, 300)
 
     print(f'\nBEST GENOME:\n{winner}')
@@ -36,6 +39,10 @@ def run():
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
     with open('results/winner_xor.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
+
+    # visualize.draw_net(config, winner, True, node_names=node_names)
+    # visualize.plot_stats(stats, ylog=False, view=True)
+    # visualize.plot_species(stats, view=True)
 
 
 if __name__ == '__main__':
