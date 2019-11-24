@@ -8,6 +8,7 @@ import retro
 from NEAT_new.src.config import ConfigSonic
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
+from NEAT_new.src.statistics import Statistics
 
 
 def evaluate_genome(genomes):
@@ -79,7 +80,8 @@ def run():
         default_genome = None
 
     config = ConfigSonic()
-    population = GeneticAlgorithm(config, default_genome)
+    stats = Statistics()
+    population = GeneticAlgorithm(config, default_genome, stats)
     winner = population.run(evaluate_genome, 50)
 
     print(f'\nBEST GENOME:\n{winner}')
@@ -88,6 +90,10 @@ def run():
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
     with open('results/winner_sonic.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
+
+    stats.draw_genome(winner)
+    stats.draw_stats()
+    stats.draw_species()
 
 
 if __name__ == '__main__':

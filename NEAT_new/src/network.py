@@ -1,4 +1,5 @@
 import math
+from statistics import median, mean
 
 
 class Network:
@@ -45,8 +46,15 @@ class Network:
                 node_gene = genome.nodes[node]
                 if node_gene.aggregation == 'sum':
                     aggregation_function = sum
+                elif node_gene.aggregation == 'max':
+                    aggregation_function = max
+                elif node_gene.aggregation == 'median':
+                    aggregation_function = median
+                elif node_gene.aggregation == 'mean':
+                    aggregation_function = mean
                 else:
                     aggregation_function = None
+
                 if node_gene.activation == 'sigmoid':
                     activation_function = Network.sigmoid
                 else:
@@ -61,6 +69,20 @@ class Network:
     def sigmoid(x):
         x = max(-60.0, min(60.0, 5.0 * x))
         return 1.0 / (1.0 + math.exp(-x))
+
+    @staticmethod
+    def sigmoid_paper(x):
+        # 4.9 from documentation
+        return 1.0 / (1.0 + math.exp(-4.9 * x))
+
+    @staticmethod
+    def tanh(x):
+        x = max(-60.0, min(60.0, 2.5 * x))
+        return math.tanh(x)
+
+    @staticmethod
+    def relu(z):
+        return z if z > 0.0 else 0.0
 
     @staticmethod
     def layers(inputs, outputs, connections):

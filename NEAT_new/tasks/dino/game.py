@@ -8,6 +8,7 @@ from math import floor
 from NEAT_new.src.config import ConfigDino
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
+from NEAT_new.src.statistics import Statistics
 from NEAT_new.tasks.dino.dino import Dino
 from NEAT_new.tasks.dino.ground import Ground
 from NEAT_new.tasks.dino.cactus import Cactus
@@ -226,7 +227,8 @@ class Game:
             default_genome = None
 
         config = ConfigDino()
-        p = GeneticAlgorithm(config, default_genome)
+        stats = Statistics()
+        p = GeneticAlgorithm(config, default_genome, stats)
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')
 
@@ -234,6 +236,10 @@ class Game:
         os.makedirs(os.path.dirname(dir_name), exist_ok=True)
         with open('results/winner_dino.pkl', 'wb') as output:
             pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
+
+        stats.draw_genome(winner)
+        stats.draw_stats()
+        stats.draw_species()
 
     def draw_what_dino_know(self, distance_to_next_obstacle, height_of_obstacle, width_of_obstacle, speed,
                             dino_y, gap_between_obstacles):

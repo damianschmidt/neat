@@ -6,9 +6,10 @@ import pygame
 from NEAT_new.src.config import ConfigFlappyBird
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
+from NEAT_new.src.statistics import Statistics
 from NEAT_new.tasks.flappy_bird.bird import Bird
-from NEAT_new.tasks.flappy_bird.pipe import Pipe
 from NEAT_new.tasks.flappy_bird.ground import Ground
+from NEAT_new.tasks.flappy_bird.pipe import Pipe
 
 pygame.init()
 pygame.display.set_caption('Flappy Bird')
@@ -21,7 +22,8 @@ class Game:
         self.screen_height = 800
         self.base = 730
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        self.bg_img = pygame.transform.scale(pygame.image.load('flappy_bird/src/img/background.png').convert_alpha(), (600, 900))
+        self.bg_img = pygame.transform.scale(pygame.image.load('flappy_bird/src/img/background.png').convert_alpha(),
+                                             (600, 900))
         self.score = 0
         self.run = False
         self.generation = 0
@@ -228,7 +230,8 @@ class Game:
             default_genome = None
 
         config = ConfigFlappyBird()
-        p = GeneticAlgorithm(config, default_genome)
+        stats = Statistics()
+        p = GeneticAlgorithm(config, default_genome, stats)
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')
 
@@ -236,3 +239,7 @@ class Game:
         os.makedirs(os.path.dirname(dir_name), exist_ok=True)
         with open('results/winner_flappy_bird.pkl', 'wb') as output:
             pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
+
+        stats.draw_genome(winner)
+        stats.draw_stats()
+        stats.draw_species()
