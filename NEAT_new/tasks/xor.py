@@ -4,6 +4,7 @@ import pickle
 from NEAT_new.src.config import Config
 from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
 from NEAT_new.src.network import Network
+from NEAT_new.src.statistics import Statistics
 
 xor_inputs = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
 xor_outputs = [(0.0,), (1.0,), (1.0,), (0.0,)]
@@ -27,9 +28,8 @@ def run():
         default_genome = None
 
     config = Config()
-    population = GeneticAlgorithm(config, default_genome)
-    # stats = neat.StatisticsReporter()
-    # p.add_reporter(stats)
+    stats = Statistics()
+    population = GeneticAlgorithm(config, default_genome, stats)
 
     winner = population.run(evaluate_genome, 300)
 
@@ -40,9 +40,9 @@ def run():
     with open('results/winner_xor.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
-    # visualize.draw_net(config, winner, True, node_names=node_names)
-    # visualize.plot_stats(stats, ylog=False, view=True)
-    # visualize.plot_species(stats, view=True)
+    stats.draw_genome(winner)
+    stats.draw_stats()
+    stats.draw_species()
 
 
 if __name__ == '__main__':

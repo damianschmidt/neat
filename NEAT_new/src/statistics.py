@@ -1,3 +1,4 @@
+import copy
 from statistics import mean, stdev
 
 import matplotlib.pyplot as plt
@@ -10,7 +11,7 @@ class Statistics:
         self.most_fit_genomes = []
         self.generation_statistics = []
 
-    def print_stats(self, filename='population_stats.svg'):
+    def draw_stats(self, filename='population_stats.svg'):
         generations = range(len(self.most_fit_genomes))
         best_fitnesses = [genome.fitness for genome in self.most_fit_genomes]
         average_fitnesses = np.array(self.get_fitness_stat(mean))
@@ -30,9 +31,6 @@ class Statistics:
         plt.show()
         plt.close()
 
-    def draw_trains(self):
-        pass
-
     def draw_species(self, filename='species.svg'):
         species_size = self.get_species_sizes()
         generations = len(species_size)
@@ -48,7 +46,8 @@ class Statistics:
         plt.show()
         plt.close()
 
-    def draw_genome(self, genome):
+    @staticmethod
+    def draw_genome(genome):
         node_settings = {
             'shape': 'circle',
             'font_size': '7',
@@ -62,7 +61,6 @@ class Statistics:
         input_nodes_ids = [node.node_id for node in genome.nodes.values() if node.node_type == 'INPUT']
         input_settings = {
             'style': 'filled',
-            'shape': 'box',
             'fillcolor': 'red'
         }
         for node in input_nodes_ids:
@@ -73,7 +71,6 @@ class Statistics:
         output_nodes_ids = [node.node_id for node in genome.nodes.values() if node.node_type == 'OUTPUT']
         output_settings = {
             'style': 'filled',
-            'shape': 'box',
             'fillcolor': 'blue'
         }
         for node in output_nodes_ids:
@@ -83,7 +80,6 @@ class Statistics:
         hidden = set()
         hidden_settings = {
             'style': 'filled',
-            'shape': 'box',
             'fillcolor': 'green'
         }
         hidden_nodes_ids = [node.node_id for node in genome.nodes.values() if node.node_type == 'HIDDEN']
@@ -91,17 +87,18 @@ class Statistics:
             hidden.add(node)
             dot.node(name=str(node), _attributes=hidden_settings)
 
-        for connection in genome.connection.values():
+        for connection in genome.connections.values():
             if connection.enabled:
                 i, o = connection.connection_id
                 connection_settings = {
                     'style': 'solid',
                     'color': 'black',
-                    'penwidth': str(0.1 + abs(connection.weight / 5.0))
+                    'penwidth': str(0.1 + abs(connection.weight / 5.0)),
+                    'label': f'{connection.weight:.2f}'
                 }
                 dot.edge(str(i), str(o), _attributes=connection_settings)
 
-        dot.render('genome.svg', view=True)
+        dot.render('genome', view=True)
 
         return dot
 
@@ -126,3 +123,12 @@ class Statistics:
             species_counts.append(species)
 
         return species_counts
+
+    def post_evaluate(self, species, best_genome):
+        self.most_fit_genomes.append(copy.deepcopy(best_genome))
+        species_stats = {}
+        for species_id, s in species.species.items():
+            species_stats[species_id] = dict((k, v.fitness) for k, v in s.members.items())
+        self.generation_statistics.append(species_stats)
+
+

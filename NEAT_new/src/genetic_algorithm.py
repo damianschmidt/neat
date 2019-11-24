@@ -14,7 +14,7 @@ class ProblemSolvedException(Exception):
 
 
 class GeneticAlgorithm:
-    def __init__(self, config, default_genome=None):
+    def __init__(self, config, default_genome=None, stats=None):
         self.generation = 0
         self.best = None
         self.config = config
@@ -25,6 +25,7 @@ class GeneticAlgorithm:
         self.species.speciate(config, self.population, self.generation)
         self.generation_start = None
         self.generation_times = []
+        self.stats = stats
 
     def run(self, fitness_function, epochs=None):
         i = 0
@@ -59,6 +60,7 @@ class GeneticAlgorithm:
             if best_genome is None or genome.fitness > best_genome.fitness:
                 best_genome = genome
 
+        # post evaluate
         fitnesses = [genome.fitness for genome in self.population.values()]
         fitness_mean = mean(fitnesses)
         fitness_stdev = stdev(fitnesses)
@@ -66,6 +68,7 @@ class GeneticAlgorithm:
         print(f'POPULATIONS AVERAGE FITNESS: {fitness_mean:3.5f}, STDEV: {fitness_stdev:3.5f}')
         print(f'BEST FITNESS: {best_genome.fitness:3.5f}, SIZE: {best_genome.size()}, SPECIES: {best_species_id}, '
               f'ID: {best_genome.genome_id}')
+        self.stats.post_evaluate(self.species, best_genome)
 
         if self.best is None or best_genome.fitness > self.best.fitness:
             self.best = best_genome
