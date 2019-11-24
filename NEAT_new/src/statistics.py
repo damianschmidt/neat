@@ -2,6 +2,7 @@ from statistics import mean, stdev
 
 import matplotlib.pyplot as plt
 import numpy as np
+import graphviz
 
 
 class Statistics:
@@ -21,8 +22,8 @@ class Statistics:
         plt.plot(generations, best_fitnesses, 'r-', label='BEST')
 
         plt.title('POPULATION STATISTICS')
-        plt.xlabel('GENERATIONS')
         plt.ylabel('FITNESS')
+        plt.xlabel('GENERATIONS')
         plt.grid()
         plt.legend()
         plt.savefig(filename)
@@ -47,8 +48,62 @@ class Statistics:
         plt.show()
         plt.close()
 
-    def draw_genome(self):
-        pass
+    def draw_genome(self, genome):
+        node_settings = {
+            'shape': 'circle',
+            'font_size': '7',
+            'height': '0.1',
+            'width': '0.1'
+        }
+
+        dot = graphviz.Digraph(format='svg', node_attr=node_settings)
+
+        inputs = set()
+        input_nodes_ids = [node.node_id for node in genome.nodes.values() if node.node_type == 'INPUT']
+        input_settings = {
+            'style': 'filled',
+            'shape': 'box',
+            'fillcolor': 'red'
+        }
+        for node in input_nodes_ids:
+            inputs.add(node)
+            dot.node(name=str(node), _attributes=input_settings)
+
+        outputs = set()
+        output_nodes_ids = [node.node_id for node in genome.nodes.values() if node.node_type == 'OUTPUT']
+        output_settings = {
+            'style': 'filled',
+            'shape': 'box',
+            'fillcolor': 'blue'
+        }
+        for node in output_nodes_ids:
+            outputs.add(node)
+            dot.node(name=str(node), _attributes=output_settings)
+
+        hidden = set()
+        hidden_settings = {
+            'style': 'filled',
+            'shape': 'box',
+            'fillcolor': 'green'
+        }
+        hidden_nodes_ids = [node.node_id for node in genome.nodes.values() if node.node_type == 'HIDDEN']
+        for node in hidden_nodes_ids:
+            hidden.add(node)
+            dot.node(name=str(node), _attributes=hidden_settings)
+
+        for connection in genome.connection.values():
+            if connection.enabled:
+                i, o = connection.connection_id
+                connection_settings = {
+                    'style': 'solid',
+                    'color': 'black',
+                    'penwidth': str(0.1 + abs(connection.weight / 5.0))
+                }
+                dot.edge(str(i), str(o), _attributes=connection_settings)
+
+        dot.render('genome.svg', view=True)
+
+        return dot
 
     def get_fitness_stat(self, function):
         stat = []

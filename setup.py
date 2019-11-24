@@ -7,7 +7,7 @@ setup(
     author_email='damian.schmidt97@gmail.com',
     packages=find_packages(),
     install_requires=[
-        'graphics.py', 'numpy', 'pygame', 'gym-retro', 'matplotlib',
+        'graphics.py', 'numpy', 'pygame', 'gym-retro', 'matplotlib', 'graphviz'
     ],
     tests_require=[
         'parameterized'
