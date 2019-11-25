@@ -111,7 +111,7 @@ class ConfigMortal(Config):
 class ConfigFrogger(Config):
     # NEAT parameters
     population_size = 20
-    fitness_threshold = 600
+    fitness_threshold = 10000
 
     # genome default structure
     num_inputs = 1120
@@ -125,6 +125,6 @@ class ConfigF1(Config):
     fitness_threshold = 100000
 
     # genome default structure
-    num_inputs = 768
+    num_inputs = 1120
     num_hidden = 0
     num_outputs = 12

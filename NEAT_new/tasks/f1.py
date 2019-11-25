@@ -12,7 +12,7 @@ from NEAT_new.src.statistics import Statistics
 
 
 def evaluate_genome(genomes):
-    env = retro.make('F1-Genesis', 'Novice.1Player.DefaultSettings.Interlagos.state')
+    env = retro.make('FerrariGrandPrixChallenge-Genesis', 'Level1.NoCustomSettings.state')
     for genome_id, genome in genomes:
         ob = env.reset()
 
@@ -24,7 +24,6 @@ def evaluate_genome(genomes):
 
         done = False
         fitness_current = 0
-        max_fitness_current = 0
         counter = 0
 
         while not done:
@@ -35,22 +34,24 @@ def evaluate_genome(genomes):
 
             img_array = np.ndarray.flatten(ob)
             output = network.activate(img_array)
-
             ob, rew, done, info = env.step(output)
+
+            speed = info['speed']
 
             fitness_current += rew
 
-            if fitness_current > max_fitness_current:
-                max_fitness_current = fitness_current
+            if speed > 30:
                 counter = 0
             else:
                 counter += 1
 
-            if counter == 300:
+            if counter == 250:
                 done = True
 
             if done:
                 print(genome_id, genome.fitness)
+
+            genome.fitness = fitness_current
     env.render(close=True)
 
 
