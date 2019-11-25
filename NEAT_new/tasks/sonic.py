@@ -26,7 +26,7 @@ def evaluate_genome(genomes):
         current_max_fitness = 0
         counter = 0
         xpos_max = 0
-        # rings_max = 0
+        rings_max = 0
 
         while not done:
             # env.render()
@@ -41,23 +41,21 @@ def evaluate_genome(genomes):
 
             xpos = info['x']
             xpos_end = info['screen_x_end']
-            # rings = info['rings']
-
-            # fitness_current += rew
+            rings = info['rings']
 
             if xpos > xpos_max:
                 fitness_current += 1
                 xpos_max = xpos
 
-            # if rings > rings_max:
-            #     fitness_current += 10
-            #     rings_max = rings
-            #
+            if rings > rings_max:
+                fitness_current += 10
+                rings_max = rings
+
             if xpos == xpos_end and xpos > 100:
                 fitness_current += 100000
                 done = True
 
-            if fitness_current > current_max_fitness:
+            if fitness_current != current_max_fitness:
                 current_max_fitness = fitness_current
                 counter = 0
             else:

@@ -22,6 +22,11 @@ def evaluate_genome(genomes):
         network = Network.create(genome)
 
         done = False
+        fitness_current = 0
+        max_fitness_current = 0
+        health = 166
+        enemy_health = 166
+        counter = 0
 
         while not done:
             env.render()
@@ -34,8 +39,36 @@ def evaluate_genome(genomes):
 
             ob, rew, done, info = env.step(output)
 
-            # add rewarding
+            actual_health = info['health']
+            actual_enemy_health = info['enemy_health']
 
+            if enemy_health > actual_enemy_health:
+                fitness_current += enemy_health - actual_enemy_health
+                enemy_health = actual_enemy_health
+
+            if health > actual_health:
+                if actual_health <= 0:
+                    done = True
+                    fitness_current -= 1000
+                else:
+                    fitness_current -= (health - actual_health) * 0.2
+                    health = actual_health
+
+            if actual_enemy_health <= 0:
+                fitness_current += 100000
+                done = True
+
+            if fitness_current != max_fitness_current:
+                max_fitness_current = fitness_current
+                counter = 0
+            else:
+                counter += 1
+
+            if counter == 250:
+                done = True
+                print(genome_id, genome.fitness)
+
+            genome.fitness = fitness_current
     env.render(close=True)
 
 

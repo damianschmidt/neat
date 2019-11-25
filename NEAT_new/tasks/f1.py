@@ -23,6 +23,9 @@ def evaluate_genome(genomes):
         network = Network.create(genome)
 
         done = False
+        fitness_current = 0
+        max_fitness_current = 0
+        counter = 0
 
         while not done:
             env.render()
@@ -35,8 +38,17 @@ def evaluate_genome(genomes):
 
             ob, rew, done, info = env.step(output)
 
-            # add rewarding
+            fitness_current += rew
 
+            if fitness_current != max_fitness_current:
+                max_fitness_current = fitness_current
+                counter = 0
+            else:
+                counter += 1
+
+            if counter == 250:
+                done = True
+                print(genome_id, genome.fitness)
     env.render(close=True)
 
 
