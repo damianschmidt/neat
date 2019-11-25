@@ -50,7 +50,7 @@ def evaluate_genome(genomes):
             else:
                 counter += 1
 
-            if counter == 120:
+            if counter == 100:
                 done = True
 
             if done:
