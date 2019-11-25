@@ -95,3 +95,36 @@ class ConfigSonic(Config):
     num_inputs = 1120
     num_hidden = 0
     num_outputs = 12
+
+
+class ConfigMortal(Config):
+    # NEAT parameters
+    population_size = 20
+    fitness_threshold = 100000
+
+    # genome default structure
+    num_inputs = 1120
+    num_hidden = 0
+    num_outputs = 12
+
+
+class ConfigFrogger(Config):
+    # NEAT parameters
+    population_size = 20
+    fitness_threshold = 100000
+
+    # genome default structure
+    num_inputs = 1120
+    num_hidden = 0
+    num_outputs = 12
+
+
+class ConfigF1(Config):
+    # NEAT parameters
+    population_size = 20
+    fitness_threshold = 100000
+
+    # genome default structure
+    num_inputs = 768
+    num_hidden = 0
+    num_outputs = 12
