@@ -7,11 +7,12 @@ import graphviz
 
 
 class Statistics:
-    def __init__(self):
+    def __init__(self, task_name):
+        self.task_name = task_name
         self.most_fit_genomes = []
         self.generation_statistics = []
 
-    def draw_stats(self, filename='population_stats.svg'):
+    def draw_stats(self):
         generations = range(len(self.most_fit_genomes))
         best_fitnesses = [genome.fitness for genome in self.most_fit_genomes]
         average_fitnesses = np.array(self.get_fitness_stat(mean))
@@ -27,11 +28,11 @@ class Statistics:
         plt.xlabel('GENERATIONS')
         plt.grid()
         plt.legend()
-        plt.savefig(filename)
+        plt.savefig(f'{self.task_name}_population_stats.svg')
         plt.show()
         plt.close()
 
-    def draw_species(self, filename='species.svg'):
+    def draw_species(self):
         species_size = self.get_species_sizes()
         generations = len(species_size)
         curves = np.array(species_size).T
@@ -42,12 +43,11 @@ class Statistics:
         plt.title('SPECIES')
         plt.ylabel('SIZE OF SPECIES')
         plt.xlabel('GENERATIONS')
-        plt.savefig(filename)
+        plt.savefig(f'{self.task_name}_species.svg')
         plt.show()
         plt.close()
 
-    @staticmethod
-    def draw_genome(genome):
+    def draw_genome(self, genome):
         node_settings = {
             'shape': 'circle',
             'font_size': '7',
@@ -98,7 +98,7 @@ class Statistics:
                 }
                 dot.edge(str(i), str(o), _attributes=connection_settings)
 
-        dot.render('genome', view=True)
+        dot.render(f'{self.task_name}_genome', view=True)
 
         return dot
 

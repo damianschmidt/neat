@@ -28,7 +28,7 @@ def run():
         default_genome = None
 
     config = Config()
-    stats = Statistics()
+    stats = Statistics(task_name='xor')
     population = GeneticAlgorithm(config, default_genome, stats)
 
     winner = population.run(evaluate_genome, 300)

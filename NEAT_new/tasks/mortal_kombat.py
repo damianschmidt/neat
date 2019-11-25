@@ -24,7 +24,6 @@ def evaluate_genome(genomes):
         done = False
         fitness_current = 0
         max_fitness_current = 0
-        health = 166
         enemy_health = 166
         counter = 0
 
@@ -46,26 +45,23 @@ def evaluate_genome(genomes):
                 fitness_current += enemy_health - actual_enemy_health
                 enemy_health = actual_enemy_health
 
-            if health > actual_health:
-                if actual_health <= 0:
-                    done = True
-                    fitness_current -= 1000
-                else:
-                    fitness_current -= (health - actual_health) * 0.2
-                    health = actual_health
-
-            if actual_enemy_health <= 0:
-                fitness_current += 100000
+            if actual_health <= 0:
                 done = True
+                fitness_current = 0
 
-            if fitness_current != max_fitness_current:
+            if fitness_current > max_fitness_current:
                 max_fitness_current = fitness_current
                 counter = 0
+                if actual_enemy_health <= 0:
+                    fitness_current = 166
+                    counter = 200
             else:
                 counter += 1
 
-            if counter == 250:
+            if counter == 300:
                 done = True
+
+            if done:
                 print(genome_id, genome.fitness)
 
             genome.fitness = fitness_current
@@ -81,7 +77,7 @@ def run():
         default_genome = None
 
     config = ConfigMortal()
-    stats = Statistics()
+    stats = Statistics(task_name='mortal')
     population = GeneticAlgorithm(config, default_genome, stats)
     winner = population.run(evaluate_genome, 50)
 
@@ -92,7 +88,7 @@ def run():
     with open('results/winner_mortal.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
-    stats.draw_genome(winner)
+    # stats.draw_genome(winner)
     stats.draw_stats()
     stats.draw_species()
 

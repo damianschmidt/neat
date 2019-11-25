@@ -52,6 +52,8 @@ def evaluate_genome(genomes):
 
             if counter == 250:
                 done = True
+
+            if done:
                 print(genome_id, genome.fitness)
 
             genome.fitness = fitness_current
@@ -67,7 +69,7 @@ def run():
         default_genome = None
 
     config = ConfigFrogger()
-    stats = Statistics()
+    stats = Statistics(task_name='frogger')
     population = GeneticAlgorithm(config, default_genome, stats)
     winner = population.run(evaluate_genome, 50)
 
@@ -78,7 +80,7 @@ def run():
     with open('results/winner_frogger.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
-    stats.draw_genome(winner)
+    # stats.draw_genome(winner)
     stats.draw_stats()
     stats.draw_species()
 

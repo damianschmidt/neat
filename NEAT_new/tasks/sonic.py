@@ -55,14 +55,16 @@ def evaluate_genome(genomes):
                 fitness_current += 100000
                 done = True
 
-            if fitness_current != current_max_fitness:
+            if fitness_current > current_max_fitness:
                 current_max_fitness = fitness_current
                 counter = 0
             else:
                 counter += 1
 
-            if counter == 250:
+            if counter == 300:
                 done = True
+
+            if done:
                 print(genome_id, genome.fitness)
 
             genome.fitness = fitness_current
@@ -78,7 +80,7 @@ def run():
         default_genome = None
 
     config = ConfigSonic()
-    stats = Statistics()
+    stats = Statistics(task_name='sonic')
     population = GeneticAlgorithm(config, default_genome, stats)
     winner = population.run(evaluate_genome, 50)
 
@@ -89,7 +91,7 @@ def run():
     with open('results/winner_sonic.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
-    stats.draw_genome(winner)
+    # stats.draw_genome(winner)
     stats.draw_stats()
     stats.draw_species()
 

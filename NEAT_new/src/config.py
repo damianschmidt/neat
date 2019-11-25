@@ -100,7 +100,7 @@ class ConfigSonic(Config):
 class ConfigMortal(Config):
     # NEAT parameters
     population_size = 20
-    fitness_threshold = 100000
+    fitness_threshold = 166
 
     # genome default structure
     num_inputs = 1120

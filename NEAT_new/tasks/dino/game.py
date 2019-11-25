@@ -227,7 +227,7 @@ class Game:
             default_genome = None
 
         config = ConfigDino()
-        stats = Statistics()
+        stats = Statistics(task_name='dino')
         p = GeneticAlgorithm(config, default_genome, stats)
         winner = p.run(self.eval_genomes, 50)
         print(f'\nBEST GENOME:\n{winner}')
