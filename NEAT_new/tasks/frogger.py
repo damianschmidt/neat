@@ -28,7 +28,7 @@ def evaluate_genome(genomes):
         counter = 0
 
         while not done:
-            env.render()
+            # env.render()
             ob = cv2.resize(ob, (inx, iny))
             ob = cv2.cvtColor(ob, cv2.COLOR_BGR2GRAY)
             ob = np.reshape(ob, (inx, iny))
@@ -50,34 +50,34 @@ def evaluate_genome(genomes):
             else:
                 counter += 1
 
-            if counter == 100:
+            if counter == 150:
                 done = True
 
             if done:
                 print(genome_id, genome.fitness)
 
             genome.fitness = fitness_current
-    env.render(close=True)
+    # env.render(close=True)
 
 
 def run():
     try:
-        with open('./results/winner_frogger.pkl', 'rb') as input_file:
+        with open('results/genomes/frogger/winner_frogger_4_100-150_fs_neat.pkl', 'rb') as input_file:
             default_genome = pickle.load(input_file)
     except FileNotFoundError:
         print('No previous winner data! Create new genome set')
         default_genome = None
 
     config = ConfigFrogger()
-    stats = Statistics(task_name='frogger')
+    stats = Statistics(task_name='frogger_4_100-150_fs_neat')
     population = GeneticAlgorithm(config, default_genome, stats)
-    winner = population.run(evaluate_genome, 50)
+    winner = population.run(evaluate_genome, 150)
 
-    print(f'\nBEST GENOME:\n{winner}')
+    # print(f'\nBEST GENOME:\n{winner}')
 
     dir_name = './results/'
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
-    with open('results/winner_frogger.pkl', 'wb') as output:
+    with open('results/genomes/frogger/winner_frogger_4_100-150_fs_neat.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
     # stats.draw_genome(winner)

@@ -29,7 +29,7 @@ def evaluate_genome(genomes):
         rings_max = 0
 
         while not done:
-            # env.render()
+            env.render()
             ob = cv2.resize(ob, (inx, iny))
             ob = cv2.cvtColor(ob, cv2.COLOR_BGR2GRAY)
             ob = np.reshape(ob, (inx, iny))
@@ -43,6 +43,8 @@ def evaluate_genome(genomes):
             xpos_end = info['screen_x_end']
             rings = info['rings']
 
+            fitness_current += rew
+
             if xpos > xpos_max:
                 fitness_current += 1
                 xpos_max = xpos
@@ -52,8 +54,7 @@ def evaluate_genome(genomes):
                 rings_max = rings
 
             if xpos == xpos_end and xpos > 100:
-                fitness_current += 100000
-                done = True
+                fitness_current = xpos_end
 
             if fitness_current > current_max_fitness:
                 current_max_fitness = fitness_current
@@ -68,27 +69,27 @@ def evaluate_genome(genomes):
                 print(genome_id, genome.fitness)
 
             genome.fitness = fitness_current
-    # env.render(close=True)
+    env.render(close=True)
 
 
 def run():
     try:
-        with open('./results/winner_sonic.pkl', 'rb') as input_file:
+        with open('results/genomes/sonic/winner_sonic_4_50_150_fs_neat.pkl', 'rb') as input_file:
             default_genome = pickle.load(input_file)
     except FileNotFoundError:
         print('No previous winner data! Create new genome set')
         default_genome = None
 
     config = ConfigSonic()
-    stats = Statistics(task_name='sonic')
+    stats = Statistics(task_name='sonic_4_50_150_fs_neat_extra_rew')
     population = GeneticAlgorithm(config, default_genome, stats)
-    winner = population.run(evaluate_genome, 50)
+    winner = population.run(evaluate_genome, 100)
 
-    print(f'\nBEST GENOME:\n{winner}')
+    # print(f'\nBEST GENOME:\n{winner}')
 
     dir_name = './results/'
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
-    with open('results/winner_sonic.pkl', 'wb') as output:
+    with open('results/genomes/sonic/winner_sonic_4_50_150_fs_neat_extra_rew.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
     # stats.draw_genome(winner)

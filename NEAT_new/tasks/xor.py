@@ -21,14 +21,14 @@ def evaluate_genome(genomes):
 
 def run():
     try:
-        with open('./results/winner_xor.pkl', 'rb') as input_file:
+        with open('results/genomes/xor/winner_xor_fs_neat.pkl', 'rb') as input_file:
             default_genome = pickle.load(input_file)
     except FileNotFoundError:
         print('No previous winner data! Create new genome set')
         default_genome = None
 
     config = Config()
-    stats = Statistics(task_name='xor')
+    stats = Statistics(task_name='xor_fs_neat')
     population = GeneticAlgorithm(config, default_genome, stats)
 
     winner = population.run(evaluate_genome, 300)
@@ -37,7 +37,7 @@ def run():
 
     dir_name = './results/'
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
-    with open('results/winner_xor.pkl', 'wb') as output:
+    with open('results/genomes/xor/winner_xor_fs_neat.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
     stats.draw_genome(winner)

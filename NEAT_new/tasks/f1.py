@@ -38,9 +38,9 @@ def evaluate_genome(genomes):
 
             speed = info['speed']
 
-            fitness_current += rew
+            fitness_current += rew * 0.1
 
-            if speed > 30:
+            if speed > 100:
                 counter = 0
             else:
                 counter += 1
@@ -57,22 +57,22 @@ def evaluate_genome(genomes):
 
 def run():
     try:
-        with open('./results/winner_f1.pkl', 'rb') as input_file:
+        with open('results/genomes/f1/winner_f1_4_150_100_fs_neat.pkl', 'rb') as input_file:
             default_genome = pickle.load(input_file)
     except FileNotFoundError:
         print('No previous winner data! Create new genome set')
         default_genome = None
 
     config = ConfigF1()
-    stats = Statistics(task_name='f1')
+    stats = Statistics(task_name='f1_4_150_100_fs_neat')
     population = GeneticAlgorithm(config, default_genome, stats)
-    winner = population.run(evaluate_genome, 50)
+    winner = population.run(evaluate_genome, 100)
 
-    print(f'\nBEST GENOME:\n{winner}')
+    # print(f'\nBEST GENOME:\n{winner}')
 
     dir_name = './results/'
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
-    with open('results/winner_f1.pkl', 'wb') as output:
+    with open('results/genomes/f1/winner_f1_4_150_100_fs_neat.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
     # stats.draw_genome(winner)

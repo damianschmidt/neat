@@ -22,9 +22,10 @@ def evaluate_genome(genomes):
         network = Network.create(genome)
 
         done = False
-        fitness_current = 0
-        max_fitness_current = 0
+        fitness_current = 0.0
+        max_fitness_current = 0.0
         enemy_health = 166
+        health = 166
         counter = 0
 
         while not done:
@@ -45,6 +46,10 @@ def evaluate_genome(genomes):
                 fitness_current += enemy_health - actual_enemy_health
                 enemy_health = actual_enemy_health
 
+            if health > actual_health:
+                fitness_current -= (health - actual_health)
+                health = actual_health
+
             if actual_health <= 0:
                 done = True
                 fitness_current = 0
@@ -53,7 +58,7 @@ def evaluate_genome(genomes):
                 max_fitness_current = fitness_current
                 counter = 0
                 if actual_enemy_health <= 0:
-                    fitness_current = 166
+                    # fitness_current = 166
                     counter = 200
             else:
                 counter += 1
@@ -70,22 +75,22 @@ def evaluate_genome(genomes):
 
 def run():
     try:
-        with open('./results/winner_mortal.pkl', 'rb') as input_file:
+        with open('results/genomes/mortal/winner_mortal_4_50_100_fs_neat.pkl', 'rb') as input_file:
             default_genome = pickle.load(input_file)
     except FileNotFoundError:
         print('No previous winner data! Create new genome set')
         default_genome = None
 
     config = ConfigMortal()
-    stats = Statistics(task_name='mortal')
+    stats = Statistics(task_name='mortal_4_300_100_fs_neat')
     population = GeneticAlgorithm(config, default_genome, stats)
-    winner = population.run(evaluate_genome, 50)
+    winner = population.run(evaluate_genome, 100)
 
-    print(f'\nBEST GENOME:\n{winner}')
+    # print(f'\nBEST GENOME:\n{winner}')
 
     dir_name = './results/'
     os.makedirs(os.path.dirname(dir_name), exist_ok=True)
-    with open('results/winner_mortal.pkl', 'wb') as output:
+    with open('results/winner_mortal_4_300_100_fs_neat.pkl', 'wb') as output:
         pickle.dump(winner, output, protocol=pickle.HIGHEST_PROTOCOL)
 
     # stats.draw_genome(winner)
