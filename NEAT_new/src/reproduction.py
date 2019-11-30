@@ -114,7 +114,7 @@ class Reproduction:
             reproduction_cutoff = int(math.ceil(config.survival_threshold * len(old_members)))
 
             # use at least two parents no matter what the threshold fraction result is
-            reproduction_cutoff = max(reproduction_cutoff, 2)
+            reproduction_cutoff = max(reproduction_cutoff, config.elitism)
             old_members = old_members[:reproduction_cutoff]
 
             # randomly choose parents and produce the number of offspring allotted to the species

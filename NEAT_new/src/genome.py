@@ -38,7 +38,7 @@ class Genome:
             outputs = {node_id: node for node_id, node in self.nodes.items() if node.node_type == 'OUTPUT'}
 
             # randomly connect one input to all output nodes
-            input_id = choice(inputs.keys())
+            input_id = choice(list(inputs.keys()))
             for output_id in outputs.keys():
                 connection = ConnectionGene((input_id, output_id))
                 self.connections[connection.connection_id] = connection

@@ -70,6 +70,8 @@ class ConfigFlappyBird(Config):
     # NEAT parameters
     fitness_threshold = 5000
 
+    initial_connection = 'fs_neat'
+
     # genome default structure
     num_inputs = 3
     num_hidden = 0
@@ -80,6 +82,8 @@ class ConfigDino(Config):
     # NEAT parameters
     fitness_threshold = 650
 
+    initial_connection = 'fs_neat'
+
     # genome default structure
     num_inputs = 6
     num_hidden = 0
@@ -88,43 +92,59 @@ class ConfigDino(Config):
 
 class ConfigSonic(Config):
     # NEAT parameters
-    population_size = 20
+    population_size = 50
     fitness_threshold = 100000
+
+    initial_connection = 'fs_neat'
 
     # genome default structure
     num_inputs = 1120
     num_hidden = 0
     num_outputs = 12
+
+    elitism = 4
 
 
 class ConfigMortal(Config):
     # NEAT parameters
-    population_size = 20
+    population_size = 40
     fitness_threshold = 166
+
+    initial_connection = 'fs_neat'
 
     # genome default structure
     num_inputs = 1120
     num_hidden = 0
     num_outputs = 12
+
+    elitism = 4
 
 
 class ConfigFrogger(Config):
     # NEAT parameters
-    population_size = 20
-    fitness_threshold = 10000
+    population_size = 100
+    fitness_threshold = 100000
+
+    initial_connection = 'fs_neat'
 
     # genome default structure
     num_inputs = 1120
     num_hidden = 0
     num_outputs = 12
+
+    elitism = 4
 
 
 class ConfigF1(Config):
     # NEAT parameters
-    population_size = 20
+    population_size = 150
     fitness_threshold = 100000
+
+    initial_connection = 'fs_neat'
 
     # genome default structure
     num_inputs = 1120
     num_hidden = 0
     num_outputs = 12
+
+    elitism = 4

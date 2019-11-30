@@ -67,13 +67,8 @@ class Network:
 
     @staticmethod
     def sigmoid(x):
-        x = max(-60.0, min(60.0, 5.0 * x))
+        x = max(-60.0, min(60.0, 4.9 * x))
         return 1.0 / (1.0 + math.exp(-x))
-
-    @staticmethod
-    def sigmoid_paper(x):
-        # 4.9 from documentation
-        return 1.0 / (1.0 + math.exp(-4.9 * x))
 
     @staticmethod
     def tanh(x):
