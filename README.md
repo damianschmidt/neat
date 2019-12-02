@@ -1,6 +1,8 @@
 # Praca inżynierska - program
 
 ### TODO:
-- NEAT_new
+- NEAT
     - Add tests
-    - Add Sonic (make it faster by parallel)
+    - Add multiprocessing
+    - Simplify input
+    - Search for emulator with more game env info

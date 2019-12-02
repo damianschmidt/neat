@@ -3,7 +3,7 @@ import random
 from itertools import count
 from statistics import mean
 
-from NEAT_new.src.genome import Genome
+from NEAT.src.genome import Genome
 
 
 class Reproduction:

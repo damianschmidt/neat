@@ -1,7 +1,7 @@
 from itertools import count
 from random import random, choice
 
-from NEAT_new.src.genes import NodeGene, ConnectionGene
+from NEAT.src.genes import NodeGene, ConnectionGene
 
 
 class Genome:

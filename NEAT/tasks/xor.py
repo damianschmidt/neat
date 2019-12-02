@@ -1,10 +1,10 @@
 import os
 import pickle
 
-from NEAT_new.src.config import Config
-from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
-from NEAT_new.src.network import Network
-from NEAT_new.src.statistics import Statistics
+from NEAT.src.config import Config
+from NEAT.src.genetic_algorithm import GeneticAlgorithm
+from NEAT.src.network import Network
+from NEAT.src.statistics import Statistics
 
 xor_inputs = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
 xor_outputs = [(0.0,), (1.0,), (1.0,), (0.0,)]

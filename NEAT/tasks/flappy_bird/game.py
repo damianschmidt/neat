@@ -3,13 +3,13 @@ import pickle
 
 import pygame
 
-from NEAT_new.src.config import ConfigFlappyBird
-from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
-from NEAT_new.src.network import Network
-from NEAT_new.src.statistics import Statistics
-from NEAT_new.tasks.flappy_bird.bird import Bird
-from NEAT_new.tasks.flappy_bird.ground import Ground
-from NEAT_new.tasks.flappy_bird.pipe import Pipe
+from NEAT.src.config import ConfigFlappyBird
+from NEAT.src.genetic_algorithm import GeneticAlgorithm
+from NEAT.src.network import Network
+from NEAT.src.statistics import Statistics
+from NEAT.tasks.flappy_bird.bird import Bird
+from NEAT.tasks.flappy_bird.ground import Ground
+from NEAT.tasks.flappy_bird.pipe import Pipe
 
 pygame.init()
 pygame.display.set_caption('Flappy Bird')

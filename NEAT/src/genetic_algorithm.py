@@ -4,9 +4,9 @@ import sys
 import time
 from statistics import mean, stdev
 
-from NEAT_new.src.reproduction import Reproduction
-from NEAT_new.src.species import SpeciesSet
-from NEAT_new.src.stagnation import Stagnation
+from NEAT.src.reproduction import Reproduction
+from NEAT.src.species import SpeciesSet
+from NEAT.src.stagnation import Stagnation
 
 
 class ProblemSolvedException(Exception):

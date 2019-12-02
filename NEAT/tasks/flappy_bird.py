@@ -1,4 +1,4 @@
-from NEAT_new.tasks.dino.game import Game
+from NEAT.tasks.flappy_bird.game import Game
 
 if __name__ == '__main__':
     game = Game()

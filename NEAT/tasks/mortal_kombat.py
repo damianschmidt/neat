@@ -5,10 +5,10 @@ import cv2
 import numpy as np
 import retro
 
-from NEAT_new.src.config import ConfigMortal
-from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
-from NEAT_new.src.network import Network
-from NEAT_new.src.statistics import Statistics
+from NEAT.src.config import ConfigMortal
+from NEAT.src.genetic_algorithm import GeneticAlgorithm
+from NEAT.src.network import Network
+from NEAT.src.statistics import Statistics
 
 
 def evaluate_genome(genomes):

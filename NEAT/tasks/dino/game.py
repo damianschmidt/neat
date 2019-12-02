@@ -5,14 +5,14 @@ import pygame
 from random import randint
 from math import floor
 
-from NEAT_new.src.config import ConfigDino
-from NEAT_new.src.genetic_algorithm import GeneticAlgorithm
-from NEAT_new.src.network import Network
-from NEAT_new.src.statistics import Statistics
-from NEAT_new.tasks.dino.dino import Dino
-from NEAT_new.tasks.dino.ground import Ground
-from NEAT_new.tasks.dino.cactus import Cactus
-from NEAT_new.tasks.dino.bird import Bird
+from NEAT.src.config import ConfigDino
+from NEAT.src.genetic_algorithm import GeneticAlgorithm
+from NEAT.src.network import Network
+from NEAT.src.statistics import Statistics
+from NEAT.tasks.dino.dino import Dino
+from NEAT.tasks.dino.ground import Ground
+from NEAT.tasks.dino.cactus import Cactus
+from NEAT.tasks.dino.bird import Bird
 
 pygame.init()
 pygame.display.set_caption('Dino')
