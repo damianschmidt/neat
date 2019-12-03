@@ -102,7 +102,6 @@ class Distances:
     def __init__(self, config):
         self.distances = {}
         self.config = config
-        self.config = config
         self.hits = 0
         self.misses = 0
 
