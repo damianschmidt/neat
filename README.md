@@ -1,4 +1,4 @@
-# Praca inżynierska - program
+# NEAT
 
 ### TODO:
 - NEAT
